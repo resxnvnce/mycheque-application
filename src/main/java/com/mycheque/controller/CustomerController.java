@@ -100,6 +100,6 @@ public class CustomerController {
         Object description = this.customerService.applyUpdates(updates).describeMutation();
         String message = this.messageResolver.onUpdate(locale);
 
-        return new ResponseEntity<>(GenericResult.failed(message, description), HttpStatus.OK);
+        return new ResponseEntity<>(GenericResult.succeeded(message, description), HttpStatus.OK);
     }
 }
