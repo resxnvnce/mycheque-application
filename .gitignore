@@ -1,0 +1,34 @@
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Documentation
+HELP.md
+
+# Build
+target/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+mvnw.bat
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+## The stuff below is temporary. @resxnvnce
+
+# Configuration
+src/main/resources/application.yml
+
+# Tests
+src/test/
