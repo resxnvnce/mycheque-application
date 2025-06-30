@@ -1,4 +1,4 @@
-package com.mycheque.datatransfer.accept;
+package com.mycheque.datatransfer.query;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +20,7 @@ import com.mycheque.domain.id.FiscalDataRecord;
  *
  * @author resxnvnce
  */
-@Polymorphic
+@ReceiptDefinitionTypeInfo // jackson
 public interface ReceiptDefinition {
 
     /**
@@ -100,7 +100,7 @@ public interface ReceiptDefinition {
     record ByQrRaw(
 
             @JsonProperty("qr_raw")
-            @NotBlank(message = "{@not-blank.ReceiptDefinition.ByQrRaw.qrraw}")
+            @NotBlank(message = "{@not-blank#ReceiptDefinition.ByQrRaw.qrraw}")
             String qrraw
 
     ) implements ReceiptDefinition {
@@ -121,7 +121,7 @@ public interface ReceiptDefinition {
     record ByQrUrl(
 
             @JsonProperty("qr_url")
-            @NotBlank(message = "{@not-blank.ReceiptDefinition.ByQrUrl.qrurl}")
+            @NotBlank(message = "{@not-blank#ReceiptDefinition.ByQrUrl.qrurl}")
             String qrurl
 
     ) implements ReceiptDefinition {
@@ -148,8 +148,8 @@ public interface ReceiptDefinition {
             FiscalDataRecord id,
 
             @JsonProperty("total")
-            @NotNull(message = "{@not-null#ReceiptDefinition.ByDetails.total}")
             @Positive(message = "{@positive#ReceiptDefinition.ByDetails.total}")
+            @NotNull(message = "{@not-null#ReceiptDefinition.ByDetails.total}")
             Float total,
 
             @JsonProperty("timestamp")

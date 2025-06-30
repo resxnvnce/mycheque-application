@@ -5,10 +5,8 @@ import java.util.Locale;
 import org.springframework.lang.Nullable;
 
 import com.mycheque.util.core.ConditionalChained;
-
 import com.mycheque.service.wrapper.PatchnotesOutcome;
-
-import com.mycheque.datatransfer.expose.GenericResult;
+import com.mycheque.datatransfer.result.GenericResult;
 
 /**
  * The {@link PatchnotesOutcome}-to-{@link GenericResult} mapper interface.

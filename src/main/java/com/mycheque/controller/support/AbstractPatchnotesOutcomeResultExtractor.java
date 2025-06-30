@@ -7,8 +7,8 @@ import org.springframework.lang.Nullable;
 import com.mycheque.controller.i18n.MessageResolver;
 import com.mycheque.controller.i18n.PatchnotesOutcomeResultExtractor;
 
-import com.mycheque.datatransfer.expose.GenericResult;
-import com.mycheque.datatransfer.expose.RemarkableExplained;
+import com.mycheque.datatransfer.result.GenericResult;
+import com.mycheque.datatransfer.result.RemarkableExplained;
 
 import com.mycheque.service.wrapper.PatchnotesOutcome;
 

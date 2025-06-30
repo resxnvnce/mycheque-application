@@ -3,7 +3,8 @@ package com.mycheque.client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.mycheque.client.deserialize.Polymorphic;
+import com.mycheque.client.deserialize.ResponseBodyAttributesTypeInfo;
+
 import com.mycheque.client.jsonstruct.ResponseStatusCode;
 
 /**
@@ -16,7 +17,7 @@ import com.mycheque.client.jsonstruct.ResponseStatusCode;
  * @param <T> the {@linkplain #data() content} type.
  * @author resxnvnce
  */
-@Polymorphic
+@ResponseBodyAttributesTypeInfo // jackson
 public interface ResponseBodyAttributes<T> {
 
     /**

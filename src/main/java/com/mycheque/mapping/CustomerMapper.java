@@ -9,10 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import com.mycheque.domain.Customer;
 
-import com.mycheque.datatransfer.accept.Profile;
-import com.mycheque.datatransfer.accept.Credentials;
-import com.mycheque.datatransfer.accept.ProfileUpdate;
-import com.mycheque.datatransfer.accept.CredentialsUpdate;
+import com.mycheque.datatransfer.profile.Profile;
+import com.mycheque.datatransfer.profile.Credentials;
+import com.mycheque.datatransfer.profile.ProfileUpdate;
+import com.mycheque.datatransfer.profile.CredentialsUpdate;
 
 /**
  * The mapper interface that assists in mapping several {@link Customer}-related

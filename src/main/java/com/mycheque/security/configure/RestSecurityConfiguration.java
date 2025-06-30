@@ -47,11 +47,14 @@ public class RestSecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authrz -> authrz
-                        /* See com.mycheque.controller.ReceiptController.* endpoints */
-                        .requestMatchers(HttpMethod.POST, "/mycheque.com/v1/receipts/").authenticated()
-                        /* See com.mycheque.controller.CustomerController#applyUpdates(...) */
-                        .requestMatchers(HttpMethod.PATCH, "/mycheque.com/v1/customers/").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/mycheque.com/v1/receipts/**")
+                        .authenticated()
+
+                        .requestMatchers(HttpMethod.PATCH, "/mycheque.com/v1/customers/")
+                        .authenticated()
+
+                        .anyRequest()
+                        .permitAll()
                 )
                 .httpBasic(
                         Customizer.withDefaults()

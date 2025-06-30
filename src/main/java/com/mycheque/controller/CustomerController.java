@@ -23,14 +23,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.mycheque.domain.Customer;
 
 import com.mycheque.service.CustomerService;
-import com.mycheque.service.wrapper.UpdatesWrapper;
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 
 import com.mycheque.controller.i18n.MessageResolver;
 import com.mycheque.controller.validation.CredentialsValidator;
 
-import com.mycheque.datatransfer.accept.Credentials;
-import com.mycheque.datatransfer.accept.CredentialsUpdate;
-import com.mycheque.datatransfer.expose.GenericResult;
+import com.mycheque.datatransfer.result.GenericResult;
+import com.mycheque.datatransfer.profile.Credentials;
+import com.mycheque.datatransfer.profile.CredentialsUpdate;
 
 import com.mycheque.security.DelegatingCustomerDetails;
 
@@ -76,7 +76,7 @@ public class CustomerController {
 
         credentials.securePasswordUsing(this.passwordEncoder::encode);
 
-        Object description = this.customerService.register(credentials).describeMutation();
+        Object description = this.customerService.register(credentials).toMutationDescription();
         String message = this.messageResolver.onRegistration(locale);
 
         return new ResponseEntity<>(GenericResult.succeeded(message, description), HttpStatus.CREATED);
@@ -87,9 +87,9 @@ public class CustomerController {
             @AuthenticationPrincipal DelegatingCustomerDetails principal,
             @Valid @RequestBody CredentialsUpdate credentialsUpdate, BindingResult errors, Locale locale) {
 
-        final var updates = new UpdatesWrapper(principal.getDelegate(), credentialsUpdate);
+        final var wrapper = new AuthorizedWrapper<>(principal.getDelegate(), credentialsUpdate);
 
-        boolean isBodyValid = !errors.hasErrors() && this.credentialsValidator.validate(updates, errors);
+        boolean isBodyValid = !errors.hasErrors() && this.credentialsValidator.validate(wrapper, errors);
         if (!isBodyValid) {
             String message = this.messageResolver.onFailedUpdate(errors, locale);
             return new ResponseEntity<>(GenericResult.failed(message), HttpStatus.BAD_REQUEST);
@@ -97,7 +97,7 @@ public class CustomerController {
 
         credentialsUpdate.securePasswordUsing(this.passwordEncoder::encode);
 
-        Object description = this.customerService.applyUpdates(updates).describeMutation();
+        Object description = this.customerService.applyUpdates(wrapper).toMutationDescription();
         String message = this.messageResolver.onUpdate(locale);
 
         return new ResponseEntity<>(GenericResult.succeeded(message, description), HttpStatus.OK);

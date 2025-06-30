@@ -96,6 +96,13 @@ public class DefaultMessageResolver implements MessageResolver {
         return this.source.getMessage(code, args, locale);
     }
 
+    /* General */
+
+    @Override
+    public String onEmptyResult(Locale locale) {
+        return getMessageNoArgs("@scenario.empty-result", locale);
+    }
+
     /* Customer endpoints */
 
     @Override
@@ -121,6 +128,11 @@ public class DefaultMessageResolver implements MessageResolver {
     /* Receipt Endpoints */
 
     @Override
+    public String onRemarkCode(PatchRemarkCode prc, Locale locale) {
+        return getMessageNoArgs("@remark." + getMessageCodeSuffix(prc), locale);
+    }
+
+    @Override
     public String onOkOutcome(Locale locale) {
         return getMessageNoArgs("@scenario.ok-outcome", locale);
     }
@@ -141,7 +153,7 @@ public class DefaultMessageResolver implements MessageResolver {
     }
 
     @Override
-    public String onRemarkCode(PatchRemarkCode prc, Locale locale) {
-        return getMessageNoArgs("@remark." + getMessageCodeSuffix(prc), locale);
+    public String onIllegalReceiptQuery(Errors errors, Locale locale) {
+        return onFailedAction("@scenario.illegal-receipt-query", errors, locale);
     }
 }

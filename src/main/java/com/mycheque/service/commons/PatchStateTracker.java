@@ -3,7 +3,7 @@ package com.mycheque.service.commons;
 import org.springframework.lang.Nullable;
 
 import com.mycheque.domain.Receipt;
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * Interface for tracking a {@link ReceiptDefinition}'s lifecycle.

@@ -2,32 +2,33 @@ package com.mycheque.controller.validation;
 
 import org.springframework.validation.Errors;
 
-import com.mycheque.datatransfer.accept.Credentials;
+import com.mycheque.datatransfer.profile.Credentials;
+import com.mycheque.datatransfer.profile.CredentialsUpdate;
 
-import com.mycheque.service.wrapper.UpdatesWrapper;
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 
 /**
- * Interface for validating the {@code Customer}'s credential records.
+ * Interface for validating a {@code Customer} credentials.
  *
  * @author resxnvnce
  */
 public interface CredentialsValidator {
 
     /**
-     * Determines whether the given {@link Credentials} record is valid.
+     * Determines whether the given {@link Credentials} are valid.
      *
-     * @param credentials the record to inspect.
-     * @param errors      a validation error storage.
-     * @return {@code true} if these {@code Credentials} are valid, {@code false} otherwise.
+     * @param inspected the object to inspect.
+     * @param errors    a validation error storage.
+     * @return {@code true} if the given object is valid, {@code false} otherwise.
      */
-    boolean validate(Credentials credentials, Errors errors);
+    boolean validate(Credentials inspected, Errors errors);
 
     /**
-     * Determines whether the given {@link UpdatesWrapper} record is valid.
+     * Determines whether the given {@link CredentialsUpdate} is valid.
      *
-     * @param updates the record to inspect.
-     * @param errors  a validation error storage.
-     * @return {@code true} if this {@code UpdatesWrapper} is valid, {@code false} otherwise.
+     * @param inspected the object to inspect.
+     * @param errors    a validation error storage.
+     * @return {@code true} if the given object is valid, {@code false} otherwise.
      */
-    boolean validate(UpdatesWrapper updates, Errors errors);
+    boolean validate(AuthorizedWrapper<CredentialsUpdate> inspected, Errors errors);
 }

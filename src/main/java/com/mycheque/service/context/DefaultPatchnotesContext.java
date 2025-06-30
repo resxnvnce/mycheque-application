@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 import com.mycheque.domain.Customer;
 import com.mycheque.domain.id.FiscalDataRecord;
 
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 import com.mycheque.service.wrapper.PatchnotesOutcome;
-import com.mycheque.service.wrapper.PatchnotesWrapper;
 import com.mycheque.service.commons.PatchStateTracker;
 import com.mycheque.service.commons.AbstractRemarkablesCollector;
 
-import com.mycheque.datatransfer.accept.Patchnotes;
+import com.mycheque.datatransfer.query.Patchnotes;
 import com.mycheque.datatransfer.intermediate.Remarkable;
 
 /**
@@ -49,11 +49,11 @@ public final class DefaultPatchnotesContext extends AbstractRemarkablesCollector
     /**
      * Constructs a {@code DefaultPatchnotesContext}.
      *
-     * @param wrapper a patchnotes wrapper record.
+     * @param wrapper an authorized wrapper with the patchnotes to be applied.
      */
-    public DefaultPatchnotesContext(PatchnotesWrapper wrapper) {
+    public DefaultPatchnotesContext(AuthorizedWrapper<Patchnotes> wrapper) {
         this.customer = wrapper.customer();
-        this.patchnotes = wrapper.unwrap();
+        this.patchnotes = wrapper.object();
     }
 
     /**

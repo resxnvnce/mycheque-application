@@ -1,6 +1,6 @@
-package com.mycheque.datatransfer.expose;
+package com.mycheque.datatransfer.result;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * The record explaining a single {@code Remarkable} from a patchnotes outcome.

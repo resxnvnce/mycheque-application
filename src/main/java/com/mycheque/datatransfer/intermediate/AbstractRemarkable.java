@@ -3,7 +3,7 @@ package com.mycheque.datatransfer.intermediate;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * Abstract base class for {@link Remarkable}s.

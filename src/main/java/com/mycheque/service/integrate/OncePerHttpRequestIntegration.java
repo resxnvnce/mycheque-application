@@ -14,7 +14,7 @@ import com.mycheque.client.jsonstruct.ResponseStatusCode;
 import com.mycheque.domain.Receipt;
 
 import com.mycheque.datatransfer.ClientEntity;
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 import com.mycheque.datatransfer.intermediate.Remarkable;
 import com.mycheque.datatransfer.intermediate.PatchRemark;
 import com.mycheque.datatransfer.intermediate.PatchRemarkCode;
@@ -34,7 +34,7 @@ public class OncePerHttpRequestIntegration extends AbstractOncePerRequestIntegra
     /**
      * Map of {@code RequestBodyAttributesMappingStrategy} beans respectively to their definition method.
      */
-    private final Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategiesMap;
+    private final Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategies;
 
     /**
      * The mapper supporting with resolving a {@link ClientEntity} to the actual {@link Receipt}.
@@ -44,17 +44,17 @@ public class OncePerHttpRequestIntegration extends AbstractOncePerRequestIntegra
     /**
      * Constructs a new prototype of {@code OncePerHttpRequestIntegration}.
      *
-     * @param strategiesMap the {@code RequestBodyAttributes} mapping strategies, mapped.
-     * @param factory       the factory to create request bodies.
-     * @param template      the actual client logic implementor.
-     * @param extractor     the <b>JSON</b> entities extractor.
+     * @param strategies the {@code RequestBodyAttributes} mapping strategies, mapped.
+     * @param factory    the factory to create request bodies.
+     * @param template   the actual client logic implementor.
+     * @param extractor  the <b>JSON</b> entities extractor.
      */
-    public OncePerHttpRequestIntegration(Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategiesMap,
+    public OncePerHttpRequestIntegration(Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategies,
                                          RequestBodyAttributes.Factory factory, ClientTemplate template,
                                          ClientEntityExtractor extractor) {
         super(factory, template);
         this.extractor = extractor;
-        this.strategiesMap = strategiesMap;
+        this.strategies = strategies;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class OncePerHttpRequestIntegration extends AbstractOncePerRequestIntegra
      */
     private RequestBodyAttributes mapToRequest(ReceiptDefinition definition) {
         final ReceiptDefinition.By byMethod = definition.by();
-        return this.strategiesMap.get(byMethod).getMapper(definition).apply(this.factory);
+        return this.strategies.get(byMethod).getMapper(definition).apply(this.factory);
     }
 
     /**

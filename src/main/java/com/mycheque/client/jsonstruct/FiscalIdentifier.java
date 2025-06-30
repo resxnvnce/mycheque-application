@@ -1,31 +1,32 @@
 package com.mycheque.client.jsonstruct;
 
 /**
- * The identifier of a target entity, consisting of the <strong>fiscal data</strong>
- * fields set: the {@link #drive()}, the {@link #document()} and the {@link #sign()}.
+ * The identifier of a target entity,
+ * consisting of the <strong>fiscal data</strong>
+ * fields set: {@link #fn()}, {@link #fd()} and {@link #fp()}.
  *
  * @author resxnvnce
  */
 public interface FiscalIdentifier {
 
     /**
-     * Returns the fiscal drive number, <strong>fn</strong>.
+     * Returns the fiscal drive number.
      *
      * @return the {@code FiscalIdentifier} drive number.
      */
-    String drive();
+    String fn();
 
     /**
-     * Returns the fiscal document number, <strong>fd</strong>.
+     * Returns the fiscal document number.
      *
      * @return the {@code FiscalIdentifier} document number.
      */
-    String document();
+    String fd();
 
     /**
-     * Returns the fiscal sign, <strong>fp</strong>.
+     * Returns the fiscal sign.
      *
      * @return the {@code FiscalIdentifier} sign.
      */
-    String sign();
+    String fp();
 }

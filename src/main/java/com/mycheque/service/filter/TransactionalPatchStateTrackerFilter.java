@@ -16,7 +16,7 @@ import com.mycheque.repository.ReceiptRepository;
 import com.mycheque.service.commons.PatchStateTracker;
 import com.mycheque.service.context.PatchnotesContext;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 import com.mycheque.datatransfer.intermediate.Remarkable;
 import com.mycheque.datatransfer.intermediate.PatchRemark;
 import com.mycheque.datatransfer.intermediate.PatchRemarkCode;

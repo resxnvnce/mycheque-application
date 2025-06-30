@@ -1,7 +1,6 @@
 package com.mycheque.client.deserialize;
 
 import com.mycheque.client.ResponseBodyAttributes;
-
 import com.mycheque.client.jsonstruct.ResponseStatusCode;
 
 /**

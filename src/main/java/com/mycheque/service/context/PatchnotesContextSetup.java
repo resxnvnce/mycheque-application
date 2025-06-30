@@ -2,12 +2,13 @@ package com.mycheque.service.context;
 
 import java.util.HashSet;
 
-import com.mycheque.service.wrapper.PatchnotesWrapper;
-import com.mycheque.service.commons.PatchStateTracker;
-
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.Patchnotes;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 import com.mycheque.datatransfer.intermediate.Remarkable;
 import com.mycheque.datatransfer.intermediate.PatchRemark;
+
+import com.mycheque.service.wrapper.AuthorizedWrapper;
+import com.mycheque.service.commons.PatchStateTracker;
 
 import static com.mycheque.service.ReceiptDefinitionInterpreter.interpretAllIfPossible;
 
@@ -21,10 +22,10 @@ public final class PatchnotesContextSetup {
     /**
      * Create and set up a {@code PatchnotesContext} within a request scope.
      *
-     * @param wrapper a patchnotes record alongside with the customer requested it.
+     * @param wrapper an authorized wrapper with the patchnotes to be applied.
      * @return a properly configured patchnotes context.
      */
-    public static PatchnotesContext with(PatchnotesWrapper wrapper) {
+    public static PatchnotesContext with(AuthorizedWrapper<Patchnotes> wrapper) {
         final var context = PatchnotesContext.unwrapping(wrapper);
 
         var patches = context.getPatchnotes().patches();

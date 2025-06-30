@@ -3,10 +3,11 @@ package com.mycheque.service;
 import java.util.Optional;
 
 import com.mycheque.domain.Customer;
-import com.mycheque.datatransfer.accept.Credentials;
 
-import com.mycheque.service.wrapper.UpdatesWrapper;
-import com.mycheque.service.exception.TokenAlreadyInUseException;
+import com.mycheque.datatransfer.profile.Credentials;
+import com.mycheque.datatransfer.profile.CredentialsUpdate;
+
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 
 /**
  * The service interface for {@link Customer} entities.
@@ -16,13 +17,13 @@ import com.mycheque.service.exception.TokenAlreadyInUseException;
 public interface CustomerService {
 
     /**
-     * Retrieves a {@code Customer} by its {@linkplain Customer#getUsername() username}.
+     * Removes the {@code Customer} with the given {@linkplain Customer#getId() identifier}.
+     * <p>
+     * If the customer is not found in the persistence store it is silently ignored.
      *
-     * @param username the username to find a customer by.
-     * @return the {@code Customer} with the given username or {@link Optional#empty()}
-     *         if none found.
+     * @param id the identifier of a customer to be removed from the persistence store.
      */
-    Optional<Customer> findByUsername(String username);
+    void deleteById(long id);
 
     /**
      * Returns whether a {@code Customer} with the given {@linkplain Customer#getUsername() username} exists.
@@ -34,16 +35,25 @@ public interface CustomerService {
     boolean existsByUsername(String username);
 
     /**
+     * Retrieves a {@code Customer} by its {@linkplain Customer#getUsername() username}.
+     *
+     * @param username the username to find a customer by.
+     * @return the {@code Customer} with the given username or {@link Optional#empty()}
+     *         if none found.
+     */
+    Optional<Customer> findByUsername(String username);
+
+    /**
      * Register a new customer using the {@link Credentials} specified and retrieve the entity created.
      * <p>
      * <b>NOTE:</b> This method does not perform any validation.
      *
      * @param credentials a new customer credentials.
      * @return the {@link Customer} entity saved, never {@code null}.
-     * @throws TokenAlreadyInUseException if the {@linkplain Credentials#token() token}
+     * @throws CustomerServiceException if the {@linkplain Credentials#token() token}
      *         provided is already being used by another customer.
      */
-    Customer register(Credentials credentials) throws TokenAlreadyInUseException;
+    Customer register(Credentials credentials) throws CustomerServiceException;
 
     /**
      * Update the credentials of the given {@code Customer}.
@@ -51,19 +61,10 @@ public interface CustomerService {
      * <p>
      * <b>NOTE:</b> This method does not perform any validation.
      *
-     * @param updates a wrapper, containing the updates and the {@code Customer} requested it.
+     * @param wrapper an {@code AuthorizedWrapper} with the updates to apply.
      * @return the {@link Customer} entity updated, never {@code null}.
-     * @throws TokenAlreadyInUseException if the {@linkplain Credentials#token() token}
+     * @throws CustomerServiceException if the {@linkplain Credentials#token() token}
      *         provided is already being used by another customer.
      */
-    Customer applyUpdates(UpdatesWrapper updates) throws TokenAlreadyInUseException;
-
-    /**
-     * Deletes the {@code Customer} with the given {@linkplain Customer#getId() identifier}.
-     * <p>
-     * If the customer is not found in the persistence store it is silently ignored.
-     *
-     * @param id the identifier to find a customer by.
-     */
-    void deleteById(long id);
+    Customer applyUpdates(AuthorizedWrapper<CredentialsUpdate> wrapper) throws CustomerServiceException;
 }

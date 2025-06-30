@@ -3,19 +3,21 @@ package com.mycheque.service;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mycheque.domain.Customer;
-import com.mycheque.repository.CustomerRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mycheque.mapping.CustomerMapper;
-import com.mycheque.datatransfer.accept.Credentials;
+import com.mycheque.domain.Customer;
 
-import com.mycheque.service.wrapper.UpdatesWrapper;
+import com.mycheque.mapping.CustomerMapper;
+
+import com.mycheque.repository.CustomerRepository;
+
+import com.mycheque.datatransfer.profile.Credentials;
+import com.mycheque.datatransfer.profile.CredentialsUpdate;
+
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 import com.mycheque.service.exception.TokenAlreadyInUseException;
 
 /**
@@ -44,29 +46,34 @@ public class TransactionalCustomerService implements CustomerService {
      * @param customerMapper     the mapper.
      * @param customerRepository the repository.
      */
-    @Autowired
     public TransactionalCustomerService(CustomerMapper customerMapper, CustomerRepository customerRepository) {
         this.customerMapper = customerMapper;
         this.customerRepository = customerRepository;
     }
 
     @Override
-    public Optional<Customer> findByUsername(String username) {
-        return customerRepository.findByUsername(username);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteById(long id) {
+        this.customerRepository.deleteById(id);
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return customerRepository.existsByUsername(username);
+        return this.customerRepository.existsByUsername(username);
+    }
+
+    @Override
+    public Optional<Customer> findByUsername(String username) {
+        return this.customerRepository.findByUsername(username);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Customer register(Credentials credentials) throws TokenAlreadyInUseException {
-        final var customer = customerMapper.toCustomer(credentials);
+    public Customer register(Credentials credentials) throws CustomerServiceException {
+        final var customer = this.customerMapper.toCustomer(credentials);
 
         try {
-            return customerRepository.save(customer);
+            return this.customerRepository.save(customer);
         }
         /* The only reason behind this is that the given token is already taken. */
         catch (DataIntegrityViolationException dive) {
@@ -76,13 +83,12 @@ public class TransactionalCustomerService implements CustomerService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Customer applyUpdates(UpdatesWrapper updates) throws TokenAlreadyInUseException {
-        final var customer = updates.customer();
-
-        customerMapper.applyUpdates(updates.unwrap(), customer);
+    public Customer applyUpdates(AuthorizedWrapper<CredentialsUpdate> wrapper) throws CustomerServiceException {
+        final var customer = wrapper.customer();
 
         try {
-            customerRepository.forceUpdate(customer);
+            this.customerMapper.applyUpdates(wrapper.object(), customer);
+            this.customerRepository.forceUpdate(customer);
         }
         /* The only reason behind this is that the given token is already taken. */
         catch (DataIntegrityViolationException dive) {
@@ -90,11 +96,5 @@ public class TransactionalCustomerService implements CustomerService {
         }
 
         return customer;
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void deleteById(long id) {
-        customerRepository.deleteById(id);
     }
 }

@@ -5,12 +5,12 @@ import java.util.Set;
 import com.mycheque.domain.Customer;
 import com.mycheque.domain.id.FiscalDataRecord;
 
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 import com.mycheque.service.wrapper.PatchnotesOutcome;
-import com.mycheque.service.wrapper.PatchnotesWrapper;
 import com.mycheque.service.commons.PatchStateTracker;
 import com.mycheque.service.commons.RemarkablesCollector;
 
-import com.mycheque.datatransfer.accept.Patchnotes;
+import com.mycheque.datatransfer.query.Patchnotes;
 import com.mycheque.datatransfer.intermediate.Remarkable;
 
 /**
@@ -97,10 +97,10 @@ public interface PatchnotesContext extends RemarkablesCollector {
     /**
      * Create a {@link PatchnotesContext} within a request scope.
      *
-     * @param wrapper a patchnotes record alongside with the customer requested it.
+     * @param wrapper an authorized wrapper with the patchnotes to be applied.
      * @return a patchnotes context.
      */
-    static PatchnotesContext unwrapping(PatchnotesWrapper wrapper) {
+    static PatchnotesContext unwrapping(AuthorizedWrapper<Patchnotes> wrapper) {
         return new DefaultPatchnotesContext(wrapper);
     }
 }

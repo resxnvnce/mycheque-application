@@ -1,4 +1,4 @@
-package com.mycheque.datatransfer.accept;
+package com.mycheque.client.deserialize;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
@@ -11,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 
 /**
- * Compound Jackson annotation for the {@link ReceiptDefinition} interface.
+ * Compound Jackson annotation for the
+ * {@link com.mycheque.client.ResponseBodyAttributes ResponseBodyAttributes} interface.
  *
  * @author resxnvnce
  */
@@ -20,24 +21,17 @@ import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "defined_by",
+        property = "code",
+        defaultImpl = ErrorResponseBody.class,
         visible = true
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(
-                value = ReceiptDefinition.ByQrRaw.class,
-                name = "qrraw"
-        ),
-        @JsonSubTypes.Type(
-                value = ReceiptDefinition.ByQrUrl.class,
-                name = "qrurl"
-        ),
-        @JsonSubTypes.Type(
-                value = ReceiptDefinition.ByDetails.class,
-                name = "details"
+                value = GenericResponseBody.class,
+                names = {"1"}
         )
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonAnnotationsInside
-public @interface Polymorphic {
+public @interface ResponseBodyAttributesTypeInfo {
 }

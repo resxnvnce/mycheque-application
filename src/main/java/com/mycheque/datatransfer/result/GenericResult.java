@@ -1,4 +1,4 @@
-package com.mycheque.datatransfer.expose;
+package com.mycheque.datatransfer.result;
 
 import org.springframework.lang.Nullable;
 

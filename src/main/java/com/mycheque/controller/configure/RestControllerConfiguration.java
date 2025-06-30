@@ -28,9 +28,9 @@ public class RestControllerConfiguration {
         final var resolverBean = new AcceptHeaderLocaleResolver();
 
         resolverBean.setDefaultLocale(Locale.US);
-        resolverBean.setSupportedLocales(
-                forLanguageTags("en", "en-GB", "en-US", "ru", "ru-RU")
-        );
+
+        var locales = getLocales("en", "en-GB", "en-US", "ru", "ru-RU");
+        resolverBean.setSupportedLocales(locales);
 
         return resolverBean;
     }
@@ -42,7 +42,7 @@ public class RestControllerConfiguration {
      * @return the {@code Locale}s that best represent the language tags.
      * @see Locale#forLanguageTag(String)
      */
-    private List<Locale> forLanguageTags(String... languageTags) {
+    private List<Locale> getLocales(String... languageTags) {
         return Stream.of(languageTags).distinct().map(Locale::forLanguageTag).toList();
     }
 }

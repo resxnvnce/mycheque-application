@@ -1,6 +1,6 @@
 package com.mycheque.datatransfer.intermediate;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * {@code Remarkable} is the interface for placeholders containing the

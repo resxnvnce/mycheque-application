@@ -8,7 +8,7 @@ import com.mycheque.client.jsonstruct.FiscalIdentifier;
 import com.mycheque.client.serialize.TargetDetails;
 import com.mycheque.client.serialize.QrRawAttributes;
 import com.mycheque.client.serialize.QrUrlAttributes;
-import com.mycheque.client.serialize.RequestBodyAttributesFactory;
+import com.mycheque.client.serialize.AuthorizedRequestBodyAttributesFactory;
 
 /**
  * Base container interface for entities being sent within a request body.
@@ -78,6 +78,6 @@ public interface RequestBodyAttributes {
      *         a {@code RequestBodyAttributes} instance.
      */
     static Factory factory(String token) {
-        return new RequestBodyAttributesFactory(token);
+        return new AuthorizedRequestBodyAttributesFactory(token);
     }
 }

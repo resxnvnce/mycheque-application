@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  * @param name  the item name.
  * @param price the item price per quantity measure unit, <strong>in kopecks</strong>.
- * @param total the item total cost. That is, the item quantity multiplied by its price.
+ * @param count the item units count.
  * @author resxnvnce
  */
-public record Item(@Field("name") String name, @Field("price") Integer price, @Field("total") Integer total) {
+public record Item(@Field("name") String name, @Field("price") Integer price, @Field("count") Integer count) {
 }

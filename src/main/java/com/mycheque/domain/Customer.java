@@ -3,8 +3,6 @@ package com.mycheque.domain;
 import java.util.Set;
 import java.util.StringJoiner;
 
-import org.springframework.lang.Nullable;
-
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
@@ -21,9 +19,11 @@ import com.mycheque.mapping.support.Default;
 import com.mycheque.util.hibernate6.NamedEnum;
 import com.mycheque.util.hibernate6.HibernateProxiesAware;
 
-import org.springframework.security.core.GrantedAuthority;
+import com.mycheque.datatransfer.result.MutationDescription;
 
-import com.mycheque.datatransfer.expose.MutationDescription;
+import org.springframework.lang.Nullable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * An entity representing the project user.
@@ -87,8 +87,22 @@ public @Entity class Customer implements HibernateProxiesAware {
      *
      * @return a {@link MutationDescription} exposing the public properties that have been changed.
      */
-    public MutationDescription describeMutation() {
+    public MutationDescription toMutationDescription() {
         return new MutationDescription(this.username, this.thirdpartyToken);
+    }
+
+    /**
+     * Returns a matching {@link Specification} for the
+     * partial search queries, using this {@code Customer}'s id.
+     *
+     * @return a {@code Specification} that matches this customer, never {@code null}.
+     */
+    public Specification<Receipt> toReceiptSpecification() {
+        if (this.id == null) {
+            return Specification.where(null);
+        }
+
+        return (root, query, cb) -> cb.equal(root.join("customer").get("id"), this.id);
     }
 
     /* Constructors */
@@ -169,7 +183,7 @@ public @Entity class Customer implements HibernateProxiesAware {
     @Nullable
     @Override
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -189,7 +203,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      * @return this {@code Customer}'s username.
      */
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     /**
@@ -209,7 +223,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      * @return this {@code Customer}'s password.
      */
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
@@ -229,7 +243,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      * @return the token to be used by the client module.
      */
     public String getThirdpartyToken() {
-        return thirdpartyToken;
+        return this.thirdpartyToken;
     }
 
     /**
@@ -247,7 +261,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      * @return the {@link Role}, defining their authorities.
      */
     public Role getRole() {
-        return role;
+        return this.role;
     }
 
     /**
@@ -266,7 +280,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      * @return the receipts of this {@code Customer}.
      */
     public Set<Receipt> getReceipts() {
-        return receipts;
+        return this.receipts;
     }
 
     /**
@@ -279,17 +293,7 @@ public @Entity class Customer implements HibernateProxiesAware {
         this.receipts = receipts;
     }
 
-    /* #equals(Object), #hashCode() and #toString() */
-
-    /**
-     * Proxy-aware {@code #equals(Object)} method.
-     *
-     * @see HibernateProxiesAware#proxySafeEquals(Object)
-     */
-    @Override
-    public final boolean equals(Object o) {
-        return this.proxySafeEquals(o);
-    }
+    /* java.lang.Object */
 
     /**
      * Proxy-aware {@code #hashCode()} method.
@@ -302,14 +306,26 @@ public @Entity class Customer implements HibernateProxiesAware {
     }
 
     /**
-     * Returns a {@link String} representation of this {@code Customer}.
-     * <p>
-     * NOTE: it is unsafe to use with a proxied entity!
+     * Proxy-aware {@code #equals(Object)} method.
+     *
+     * @see HibernateProxiesAware#proxySafeEquals(Object)
+     */
+    @Override
+    public final boolean equals(Object o) {
+        return this.proxySafeEquals(o);
+    }
+
+    /**
+     * <b>This method is NOT proxy-aware</b>.
      */
     @Override
     public String toString() {
         return new StringJoiner(", ", Customer.class.getSimpleName() + "[", "]")
-                .add("id=" + id).add("username='" + username + "'")
+                .add("id=" + id)
+                .add("role=" + role)
+                .add("username='" + username + "'")
+                .add("password='" + password + "'")
+                .add("thirdpartyToken='" + thirdpartyToken + "'")
                 .toString();
     }
 }

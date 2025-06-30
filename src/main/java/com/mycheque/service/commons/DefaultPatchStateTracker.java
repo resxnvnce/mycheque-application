@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.lang.Nullable;
 
 import com.mycheque.domain.Receipt;
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * The {@link PatchStateTracker} default implementation.

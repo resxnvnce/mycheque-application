@@ -6,8 +6,10 @@ import com.mycheque.domain.Receipt;
 import com.mycheque.domain.id.FiscalDataRecord;
 
 import org.springframework.stereotype.Repository;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * The repository interface for {@link Receipt} entities.
@@ -15,7 +17,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author resxnvnce
  */
 @Repository
-public interface ReceiptRepository extends JpaRepository<Receipt, FiscalDataRecord> {
+public interface ReceiptRepository extends JpaSpecificationExecutor<Receipt>, JpaRepository<Receipt, FiscalDataRecord> {
 
     /**
      * Retrieves an {@code Optional} describing the identifier of the {@code Customer},

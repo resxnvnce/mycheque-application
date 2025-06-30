@@ -1,6 +1,6 @@
 package com.mycheque.mapping;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * The strategy interface capable of mapping {@code ReceiptDefinition}s to

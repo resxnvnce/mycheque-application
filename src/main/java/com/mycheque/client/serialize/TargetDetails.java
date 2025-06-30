@@ -82,16 +82,16 @@ public interface TargetDetails extends RequestBodyAttributes {
 
     @JsonProperty("fn")
     private String fn() {
-        return id().drive();
+        return id().fn();
     }
 
     @JsonProperty("fd")
     private String fd() {
-        return id().document();
+        return id().fd();
     }
 
     @JsonProperty("fp")
     private String fp() {
-        return id().sign();
+        return id().fp();
     }
 }

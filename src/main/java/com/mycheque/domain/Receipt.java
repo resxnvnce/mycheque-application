@@ -1,9 +1,8 @@
 package com.mycheque.domain;
 
 import java.util.StringJoiner;
-import java.time.LocalDateTime;
 
-import com.mycheque.mapping.support.Default;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
@@ -17,6 +16,8 @@ import jakarta.persistence.AttributeOverride;
 
 import org.springframework.lang.Nullable;
 import org.springframework.data.domain.Persistable;
+
+import com.mycheque.mapping.support.Default;
 
 import com.mycheque.domain.id.FiscalDataRecord;
 
@@ -34,22 +35,18 @@ import com.mycheque.util.hibernate6.HibernateProxiesAware;
 public @Entity class Receipt implements HibernateProxiesAware, Persistable<FiscalDataRecord> {
 
     /**
-     * The receipt immutable compound identifier, acting as
-     * a 3-element set: the fiscal drive number "fn",
-     * the fiscal document number "fd" and the fiscal sign "fp".
+     * The receipt immutable compound identifier, acting as a 3-element set:
+     * the fiscal drive number "fn", the fiscal document number "fd" and the fiscal sign "fp".
      */
     @EmbeddedId
     @AttributeOverride(
-            name = "drive",
-            column = @Column(name = "fn", nullable = false, updatable = false, length = 31)
+            name = "fn", column = @Column(name = "fn", nullable = false, updatable = false, length = 31)
     )
     @AttributeOverride(
-            name = "document",
-            column = @Column(name = "fd", nullable = false, updatable = false, length = 31)
+            name = "fd", column = @Column(name = "fd", nullable = false, updatable = false, length = 31)
     )
     @AttributeOverride(
-            name = "sign",
-            column = @Column(name = "fp", nullable = false, updatable = false, length = 31)
+            name = "fp", column = @Column(name = "fp", nullable = false, updatable = false, length = 31)
     )
     private FiscalDataRecord id;
 
@@ -76,7 +73,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      * The customer or the owner of this receipt. The {@code Customer} might
      * be changed over time, but this isn't expected to happen too often.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private @Nullable Customer customer;
 
@@ -127,7 +124,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      */
     @Override
     public FiscalDataRecord getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -136,7 +133,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      * @return this {@code Receipt} income.
      */
     public Integer getTotal() {
-        return total;
+        return this.total;
     }
 
     /**
@@ -145,7 +142,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      * @return the foundation.
      */
     public String getFoundation() {
-        return foundation;
+        return this.foundation;
     }
 
     /**
@@ -154,7 +151,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      * @return the date-time this {@code Receipt} appeared.
      */
     public LocalDateTime getTimestamp() {
-        return timestamp;
+        return this.timestamp;
     }
 
     /**
@@ -164,7 +161,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      */
     @Nullable
     public Customer getCustomer() {
-        return customer;
+        return this.customer;
     }
 
     /**
@@ -174,7 +171,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
      */
     @Nullable
     public Purchase getPurchase() {
-        return purchase;
+        return this.purchase;
     }
 
     /**
@@ -186,7 +183,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
     @Override
     @Transient
     public boolean isNew() {
-        return isNew;
+        return this.isNew;
     }
 
     /* Setters */
@@ -219,17 +216,7 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
         this.isNew = isNew;
     }
 
-    /* #equals(Object), #hashCode() and #toString() */
-
-    /**
-     * Proxy-aware {@code #equals(Object)} method.
-     *
-     * @see HibernateProxiesAware#proxySafeEquals(Object)
-     */
-    @Override
-    public final boolean equals(Object o) {
-        return this.proxySafeEquals(o);
-    }
+    /* java.lang.Object */
 
     /**
      * Proxy-aware {@code #hashCode()} method.
@@ -242,15 +229,26 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
     }
 
     /**
-     * Returns a {@link String} representation of this {@code Receipt}.
-     * <p>
-     * NOTE: it is unsafe to use with a proxied entity!
+     * Proxy-aware {@code #equals(Object)} method.
+     *
+     * @see HibernateProxiesAware#proxySafeEquals(Object)
+     */
+    @Override
+    public final boolean equals(Object o) {
+        return this.proxySafeEquals(o);
+    }
+
+    /**
+     * <b>This method is NOT proxy-aware</b>.
      */
     @Override
     public String toString() {
         return new StringJoiner(", ", Receipt.class.getSimpleName() + "[", "]")
-                .add("id=" + id).add("foundation='" + foundation + "'").add("total=" + total)
-                .add("timestamp=" + timestamp).add("customer=" + customer)
+                .add("id=" + this.id)
+                .add("total=" + this.total)
+                .add("purchase=" + this.purchase)
+                .add("timestamp=" + this.timestamp)
+                .add("foundation='" + this.foundation + "'")
                 .toString();
     }
 }

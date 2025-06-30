@@ -12,7 +12,7 @@ import com.mycheque.util.Assert;
 import com.mycheque.client.ClientTemplate;
 import com.mycheque.client.RequestBodyAttributes;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 import com.mycheque.mapping.ClientEntityExtractor;
 import com.mycheque.mapping.RequestBodyAttributesMappingStrategy;
@@ -43,12 +43,12 @@ public class ServiceConfiguration {
      * All the implementations of {@link RequestBodyAttributesMappingStrategy},
      * mapped. Each of them should be annotated with stereotype annotation.
      */
-    private final Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategiesMap;
+    private final Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategies;
 
     /**
      * Constucts a {@code ServiceConfiguration} bean.
      *
-     * @param template     the client template to execute <b>HTTP POST</b> requests.
+     * @param template   the client template to execute <b>HTTP POST</b> requests.
      * @param extractor  the <b>JSON</b> entities extractor.
      * @param strategies the {@code RequestBodyAttributes} mapping strategies, unmapped.
      */
@@ -57,7 +57,7 @@ public class ServiceConfiguration {
                                 List<RequestBodyAttributesMappingStrategy> strategies) {
         this.template = template;
         this.extractor = extractor;
-        this.strategiesMap = Maps.mapToIdentity(strategies.stream(), RequestBodyAttributesMappingStrategy::basedOn);
+        this.strategies = Maps.mapToIdentity(strategies.stream(), RequestBodyAttributesMappingStrategy::basedOn);
     }
 
     /**
@@ -67,8 +67,8 @@ public class ServiceConfiguration {
      * @return a {@code OncePerRequestIntegration} prototype bean.
      */
     OncePerRequestIntegration getIntegration(RequestBodyAttributes.Factory factory) {
-        Assert.args(factory != null, () -> "factory must not be null");
-        return new OncePerHttpRequestIntegration(this.getStrategiesMap(), factory, this.template, this.extractor);
+        Assert.notNull(factory, () -> "factory must not be null");
+        return new OncePerHttpRequestIntegration(this.getStrategies(), factory, this.template, this.extractor);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ServiceConfiguration {
      *         {@linkplain RequestBodyAttributesMappingStrategy#basedOn() definition method}.
      */
     @Bean
-    Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> getStrategiesMap() {
-        return this.strategiesMap;
+    Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> getStrategies() {
+        return this.strategies;
     }
 }

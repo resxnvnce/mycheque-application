@@ -3,7 +3,7 @@ package com.mycheque.mapping.strategy;
 import org.springframework.stereotype.Component;
 
 import com.mycheque.mapping.RequestBodyAttributesMapper;
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * A mapping strategy eligible to work with {@link ReceiptDefinition.ByQrUrl} definitions.

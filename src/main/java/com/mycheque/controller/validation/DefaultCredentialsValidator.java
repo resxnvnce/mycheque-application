@@ -2,17 +2,17 @@ package com.mycheque.controller.validation;
 
 import java.util.function.Consumer;
 
-import org.springframework.stereotype.Component;
-
 import org.springframework.validation.Errors;
+import org.springframework.stereotype.Component;
 
 import com.mycheque.validation.CustomerTokenValidator;
 import com.mycheque.validation.UsernameNotTakenValidator;
 
-import com.mycheque.datatransfer.accept.ProfileUpdate;
-import com.mycheque.datatransfer.accept.Credentials;
+import com.mycheque.datatransfer.profile.ProfileUpdate;
+import com.mycheque.datatransfer.profile.Credentials;
+import com.mycheque.datatransfer.profile.CredentialsUpdate;
 
-import com.mycheque.service.wrapper.UpdatesWrapper;
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 
 import static com.mycheque.util.Lambdas.applyOrNull;
 
@@ -47,36 +47,20 @@ public class DefaultCredentialsValidator implements CredentialsValidator {
         this.usernameNotTakenValidator = usernameNotTakenValidator;
     }
 
-    /**
-     * Performs the {@code action} over a new value in case it's not {@code null}
-     * and isn't {@linkplain Object#equals equal} to the corresponding old value.
-     *
-     * @param oldValue the old value.
-     * @param newValue the new value.
-     * @param action   the action to be performed over {@code newValue}.
-     */
-    private <T> void acceptIfUpdatable(Object oldValue, T newValue, Consumer<? super T> action) {
-        boolean isUpdatable = newValue != null && !newValue.equals(oldValue);
-
-        if (isUpdatable) {
-            action.accept(newValue);
-        }
-    }
-
     @Override
-    public boolean validate(Credentials credentials, Errors errors) {
+    public boolean validate(Credentials inspected, Errors errors) {
         this.customerTokenValidator
-                .validate(credentials.token(), errors);
+                .validate(inspected.token(), errors);
         this.usernameNotTakenValidator
-                .validate(credentials.profile().getUsername(), errors);
+                .validate(inspected.profile().getUsername(), errors);
 
         return !errors.hasErrors();
     }
 
     @Override
-    public boolean validate(UpdatesWrapper updates, Errors errors) {
-        final var creds = updates.unwrap();
-        final var owner = updates.customer();
+    public boolean validate(AuthorizedWrapper<CredentialsUpdate> inspected, Errors errors) {
+        final var creds = inspected.object();
+        final var owner = inspected.customer();
 
         acceptIfUpdatable(
                 owner.getThirdpartyToken(),
@@ -91,5 +75,21 @@ public class DefaultCredentialsValidator implements CredentialsValidator {
         );
 
         return !errors.hasErrors();
+    }
+
+    /**
+     * Performs the {@code action} over a new value in case it's not {@code null}
+     * and isn't {@linkplain Object#equals equal} to the corresponding old value.
+     *
+     * @param oldValue the old value.
+     * @param newValue the new value.
+     * @param action   the action to be performed over {@code newValue}.
+     */
+    private <T> void acceptIfUpdatable(Object oldValue, T newValue, Consumer<? super T> action) {
+        boolean isUpdatable = newValue != null && !newValue.equals(oldValue);
+
+        if (isUpdatable) {
+            action.accept(newValue);
+        }
     }
 }

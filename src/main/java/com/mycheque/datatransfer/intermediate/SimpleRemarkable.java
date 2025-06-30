@@ -1,6 +1,6 @@
 package com.mycheque.datatransfer.intermediate;
 
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * The default {@link Remarkable} implementation.

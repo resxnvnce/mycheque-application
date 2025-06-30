@@ -2,6 +2,8 @@ package com.mycheque.client;
 
 import org.springframework.lang.Nullable;
 
+import com.mycheque.util.Assert;
+
 import com.mycheque.client.jsonstruct.StatusCode;
 import com.mycheque.client.jsonstruct.ResponseStatusCode;
 
@@ -21,7 +23,7 @@ public class ResponseStatusCodeException extends ResponseAttributesException {
      * @param attrs the attributes of the response body. Must not be {@code null}.
      */
     public ResponseStatusCodeException(ResponseBodyAttributes<String> attrs) {
-        this(attrs, initMessage(attrs));
+        this(attrs, null);
     }
 
     /**
@@ -32,7 +34,7 @@ public class ResponseStatusCodeException extends ResponseAttributesException {
      * @param message the detail message.
      */
     public ResponseStatusCodeException(ResponseBodyAttributes<String> attrs, String message) {
-        super(requireNonNull(attrs, "attrs must not be null"), message);
+        super(requireNonNull(attrs, "attrs must not be null"), message == null ? initMessage(attrs) : message);
     }
 
     /**
@@ -62,7 +64,7 @@ public class ResponseStatusCodeException extends ResponseAttributesException {
      * @return a {@code ResponseStatusCodeException} or its subclass instance.
      */
     public static ResponseStatusCodeException create(ResponseBodyAttributes<String> attrs) {
-        return create(attrs, initMessage(attrs));
+        return create(attrs, null);
     }
 
     /**
@@ -73,18 +75,23 @@ public class ResponseStatusCodeException extends ResponseAttributesException {
      * @return a {@code ResponseStatusCodeException} or its subclass instance.
      */
     public static ResponseStatusCodeException create(ResponseBodyAttributes<String> attrs, @Nullable String message) {
-        final ResponseStatusCode rsc = requireNonNull(attrs, "attrs must not be null").code();
+        Assert.notNull(attrs, () -> "attrs must not be null");
+        Assert.state(attrs.code().isError(), () -> attrs.code() + " is not an error response code");
 
-        if (!(rsc instanceof StatusCode sc))
+        if (attrs.code() instanceof StatusCode sc) {
+            return switch (sc) {
+                case TIMEOUT -> new Timeout(attrs, message == null ? initMessage(attrs) : message);
+                case BAD_REQUEST -> new BadRequest(attrs, message == null ? initMessage(attrs) : message);
+                case UNAUTHORIZED -> new Unauthorized(attrs, message == null ? initMessage(attrs) : message);
+                case NOT_AN_ENTITY -> new NotAnEntity(attrs, message == null ? initMessage(attrs) : message);
+
+                /* never happens. */
+                default -> new ResponseStatusCodeException(attrs, message == null ? initMessage(attrs) : message);
+            };
+        }
+        else {
             return new ResponseStatusCodeException(attrs, message == null ? initMessage(attrs) : message);
-
-        return switch (sc) {
-            case NOT_AN_ENTITY -> new NotAnEntity(attrs, message == null ? initMessage(attrs) : message);
-            case TIMEOUT -> new Timeout(attrs, message == null ? initMessage(attrs) : message);
-            case BAD_REQUEST -> new BadRequest(attrs, message == null ? initMessage(attrs) : message);
-            case UNAUTHORIZED -> new Unauthorized(attrs, message == null ? initMessage(attrs) : message);
-            default -> new ResponseStatusCodeException(attrs, message == null ? initMessage(attrs) : message);
-        };
+        }
     }
 
     /* Subclasses for specific StatusCode's */

@@ -20,14 +20,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.mycheque.domain.Receipt;
 
 import com.mycheque.service.ReceiptService;
+import com.mycheque.service.wrapper.AuthorizedWrapper;
 import com.mycheque.service.wrapper.PatchnotesOutcome;
-import com.mycheque.service.wrapper.PatchnotesWrapper;
 
 import com.mycheque.controller.i18n.MessageResolver;
 import com.mycheque.controller.i18n.PatchnotesOutcomeResultExtractor;
 
-import com.mycheque.datatransfer.accept.Patchnotes;
-import com.mycheque.datatransfer.expose.GenericResult;
+import com.mycheque.datatransfer.query.Patchnotes;
+import com.mycheque.datatransfer.query.ReceiptQuery;
+import com.mycheque.datatransfer.result.GenericResult;
+import com.mycheque.datatransfer.result.RequestedReceipt;
 
 import com.mycheque.security.DelegatingCustomerDetails;
 
@@ -53,33 +55,33 @@ public class ReceiptController {
     /**
      * The sorted chain of {@link PatchnotesOutcomeResultExtractor}s applied against outcomes received.
      */
-    private final List<PatchnotesOutcomeResultExtractor> resultExtractors;
+    private final List<PatchnotesOutcomeResultExtractor> outcomeMappers;
 
     /**
      * Constructs a {@link ReceiptController}.
      *
      * @param receiptService   the business logic service.
      * @param messageResolver  the validation errors message resolver.
-     * @param resultExtractors stereotype-annotated mappers.
+     * @param outcomeMappers stereotype-annotated mappers.
      */
     public ReceiptController(ReceiptService receiptService,
                              MessageResolver messageResolver,
-                             List<PatchnotesOutcomeResultExtractor> resultExtractors) {
+                             List<PatchnotesOutcomeResultExtractor> outcomeMappers) {
 
         this.receiptService = receiptService;
         this.messageResolver = messageResolver;
 
-        resultExtractors.sort(PatchnotesOutcomeResultExtractor::compareTo);
+        outcomeMappers.sort(PatchnotesOutcomeResultExtractor::compareTo);
 
-        this.resultExtractors = List.copyOf(resultExtractors);
+        this.outcomeMappers = List.copyOf(outcomeMappers);
     }
 
     @PostMapping
-    public ResponseEntity<GenericResult> saveAllReceipts(
+    public ResponseEntity<GenericResult> saveAll(
             @AuthenticationPrincipal DelegatingCustomerDetails principal,
             @Valid @RequestBody Patchnotes patchnotes, BindingResult errors, Locale locale) {
 
-        final var wrapper = new PatchnotesWrapper(principal.getDelegate(), patchnotes);
+        final var wrapper = new AuthorizedWrapper<>(principal.getDelegate(), patchnotes);
 
         boolean isBodyValid = !errors.hasErrors();
         if (!isBodyValid) {
@@ -87,19 +89,19 @@ public class ReceiptController {
             return new ResponseEntity<>(GenericResult.failed(message), HttpStatus.BAD_REQUEST);
         }
 
-        return asResponseEntity(this.receiptService.saveAllReceipts(wrapper), locale);
+        return asResponseEntity(this.receiptService.saveAll(wrapper), locale);
     }
 
     /**
-     * Convert the given patchnotes outcome into a localized response entity.
+     * Convert the given {@code PatchnotesOutcome} into a localized response entity.
      *
      * @param outcome to be converted & localized.
      * @param locale  the {@link Locale} to use for message resolving.
      * @return the patchnotes outcome as a {@link ResponseEntity}.
      */
     private ResponseEntity<GenericResult> asResponseEntity(PatchnotesOutcome outcome, Locale locale) {
-        for (var extractor : this.resultExtractors) {
-            GenericResult result = extractor.extract(outcome, locale);
+        for (var mapper : this.outcomeMappers) {
+            GenericResult result = mapper.extract(outcome, locale);
 
             if (result != null) {
                 return new ResponseEntity<>(result, result.isFailure() ? HttpStatus.BAD_REQUEST : HttpStatus.OK);
@@ -107,5 +109,33 @@ public class ReceiptController {
         }
 
         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); // never happens
+    }
+
+    @PostMapping("search/")
+    public ResponseEntity<GenericResult> findAll(
+            @AuthenticationPrincipal DelegatingCustomerDetails principal,
+            @Valid @RequestBody ReceiptQuery receiptQuery, BindingResult errors, Locale locale) {
+
+        final var wrapper = new AuthorizedWrapper<>(principal.getDelegate(), receiptQuery);
+
+        boolean isBodyValid = !errors.hasErrors();
+        if (!isBodyValid) {
+            String message = this.messageResolver.onIllegalReceiptQuery(errors, locale);
+            return new ResponseEntity<>(GenericResult.failed(message), HttpStatus.BAD_REQUEST);
+        }
+
+        return asResponseEntity(this.receiptService.findAll(wrapper), locale);
+    }
+
+    /**
+     * Convert the given {@code RequestedReceipt}s into a localized response entity.
+     *
+     * @param receipts to be converted & localized.
+     * @param locale   the {@link Locale} to use for message resolving.
+     * @return the requested receipt records as a {@link ResponseEntity}.
+     */
+    private ResponseEntity<GenericResult> asResponseEntity(List<RequestedReceipt> receipts, Locale locale) {
+        String message = receipts.isEmpty() ? this.messageResolver.onEmptyResult(locale) : null;
+        return new ResponseEntity<>(GenericResult.succeeded(message, receipts), HttpStatus.OK);
     }
 }

@@ -3,7 +3,6 @@ package com.mycheque.security;
 import com.mycheque.service.CustomerService;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * The default {@code UserDetailsService} implementation,
  * relying on the {@link CustomerService}.
- * 
+ *
  * @author resxnvnce
  */
 @Service
@@ -29,15 +28,22 @@ public class CustomerDetailsService implements UserDetailsService {
      *
      * @param service the service to delegate to.
      */
-    public CustomerDetailsService(@Autowired CustomerService service) {
+    public CustomerDetailsService(CustomerService service) {
         this.service = service;
+    }
+
+    /**
+     * Get the {@link UsernameNotFoundException} to throw if the service couldn't locate a customer.
+     *
+     * @return an exception indicating that the customer with the given username does not exist.
+     */
+    private UsernameNotFoundException getUsernameNotFoundException() {
+        return new UsernameNotFoundException("Could not find a customer by the username provided.");
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final var customer = service.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("cannot locate a customer by username: '" + username + "'")
-        );
-        return new DelegatingCustomerDetails(customer);
+        return service.findByUsername(username).map(DelegatingCustomerDetails::new)
+                .orElseThrow(this::getUsernameNotFoundException);
     }
 }

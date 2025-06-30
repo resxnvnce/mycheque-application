@@ -34,6 +34,7 @@ public interface ClientEntityExtractor {
      * @return the {@link Item} reproduced from the state of
      * the target entity item given.
      */
+    @Mapping(target = "count", expression = "java( entityItem.total() / price )")
     Item toItem(ClientEntity.Item entityItem);
 
     /**

@@ -5,9 +5,7 @@ import java.util.Locale;
 import org.springframework.stereotype.Component;
 
 import com.mycheque.controller.i18n.MessageResolver;
-
-import com.mycheque.datatransfer.expose.GenericResult;
-
+import com.mycheque.datatransfer.result.GenericResult;
 import com.mycheque.service.wrapper.PatchnotesOutcome;
 
 /**

@@ -13,6 +13,16 @@ import com.mycheque.datatransfer.intermediate.PatchRemarkCode;
  */
 public interface MessageResolver {
 
+    /* General */
+
+    /**
+     * Get the message explaining that a query result is empty.
+     *
+     * @param locale the {@link Locale} in which to do the lookup.
+     * @return a message describing that a query returned no result.
+     */
+    String onEmptyResult(Locale locale);
+
     /* Customer Endpoints */
 
     /**
@@ -52,6 +62,15 @@ public interface MessageResolver {
     /* Receipt Endpoints */
 
     /**
+     * Resolve a message explaining the given {@link PatchRemarkCode}.
+     *
+     * @param prc    a {@code PatchRemarkCode} to transform into a user-friendly message.
+     * @param locale the {@link Locale} in which to do the lookup.
+     * @return a displayable message explaining the patch remark code encountered.
+     */
+    String onRemarkCode(PatchRemarkCode prc, Locale locale);
+
+    /**
      * Resolve a message explaining the patchnotes outcome
      * is fine.
      *
@@ -89,11 +108,12 @@ public interface MessageResolver {
     String onIllegalPatchnotes(Errors errors, Locale locale);
 
     /**
-     * Resolve a message explaining the given {@link PatchRemarkCode}.
+     * Build a message for a scenario in which
+     * the validation process for a {@code ReceiptQuery} record has failed.
      *
-     * @param prc    a {@code PatchRemarkCode} to transform into a user-friendly message.
+     * @param errors a storage of the validation errors encountered.
      * @param locale the {@link Locale} in which to do the lookup.
-     * @return a displayable message explaining the patch remark code encountered.
+     * @return a message describing an illegal {@code ReceiptQuery} record has been provided.
      */
-    String onRemarkCode(PatchRemarkCode prc, Locale locale);
+    String onIllegalReceiptQuery(Errors errors, Locale locale);
 }

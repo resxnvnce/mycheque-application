@@ -1,9 +1,8 @@
-package com.mycheque.datatransfer.accept;
+package com.mycheque.datatransfer.query;
 
 import java.util.List;
 
 import jakarta.validation.Valid;
-
 import jakarta.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -33,9 +32,10 @@ public record Patchnotes(
      * The factory method used for deserialization.
      */
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public static Patchnotes fromJsonProperties(
+    static Patchnotes fromJsonProperties(
 
-            @JsonProperty("enableWarnings") @JsonFormat(shape = JsonFormat.Shape.BOOLEAN)
+            @JsonFormat(shape = JsonFormat.Shape.BOOLEAN)
+            @JsonProperty("enable_warnings")
             Boolean warningsEnabled,
 
             @JsonProperty("patches")

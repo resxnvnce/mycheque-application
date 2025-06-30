@@ -1,7 +1,8 @@
 package com.mycheque.util;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.springframework.lang.Nullable;
@@ -19,7 +20,7 @@ public final class Lambdas {
      * or return {@code null} if it's not present.
      *
      * @param supplier the supplying function to get a result from.
-     * @return {@code supplier.get()} or {@code null} if the supplying function is not present.
+     * @return {@code supplier.get()} or {@code null}.
      */
     @Nullable
     public static <T> T nullSafeGet(@Nullable Supplier<T> supplier) {
@@ -27,11 +28,37 @@ public final class Lambdas {
     }
 
     /**
+     * Apply the given {@link Function} to a nullable object
+     * in case it's present; otherwise return {@code null}.
+     *
+     * @param obj      an object to be used as the function argument.
+     * @param function the function to apply.
+     * @return {@code function.apply(obj)} or {@code null}.
+     */
+    @Nullable
+    public static <T, R> R applyOrNull(@Nullable T obj, Function<? super T, R> function) {
+        return obj != null ? function.apply(obj) : null;
+    }
+
+    /**
+     * Use the given {@link Consumer} to accept a nullable object
+     * in case it's present; otherwise do nothing.
+     *
+     * @param obj      an object to be used as the consumer argument.
+     * @param consumer the consumer.
+     */
+    public static <T> void acceptIfPresent(@Nullable T obj, Consumer<? super T> consumer) {
+        if (obj != null) {
+            consumer.accept(obj);
+        }
+    }
+
+    /**
      * Evaluate the given {@link Predicate} on the given object
      * in case it's not {@code null}; otherwise, return {@code true}.
      *
      * @param obj       a nullable object to be {@linkplain Predicate#test(Object) tested}.
-     * @param predicate the predicate to test with. Must not be {@code null} itself!
+     * @param predicate the predicate to test with.
      * @return {@code predicate.test(obj)} or {@code true}.
      */
     public static <T> boolean testOrTrue(@Nullable T obj, Predicate<? super T> predicate) {
@@ -43,26 +70,11 @@ public final class Lambdas {
      * in case it's not {@code null}; otherwise, return {@code false}.
      *
      * @param obj       a nullable object to be {@linkplain Predicate#test(Object) tested}.
-     * @param predicate the predicate to test with. Must not be {@code null} itself!
+     * @param predicate the predicate to test with.
      * @return {@code predicate.test(obj)} or {@code false}.
      */
     public static <T> boolean testOrFalse(@Nullable T obj, Predicate<? super T> predicate) {
         return obj != null && predicate.test(obj);
-    }
-
-    /**
-     * Apply the given {@link Function} to the nullable {@code Object}
-     * in case it isn't {@code null}; otherwise return {@code null}.
-     *
-     * @param obj      a nullable object to be returned or to be
-     *                 used as the argument of the function.
-     * @param function the function to apply on the object if it isn't {@code null}.
-     *                 Must not be {@code null} itself!
-     * @return {@code function.apply(obj)} or {@code null}.
-     */
-    @Nullable
-    public static <T, R> R applyOrNull(@Nullable T obj, Function<? super T, R> function) {
-        return obj != null ? function.apply(obj) : null;
     }
 
     /**

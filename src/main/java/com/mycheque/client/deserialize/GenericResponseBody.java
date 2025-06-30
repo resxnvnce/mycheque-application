@@ -1,9 +1,8 @@
 package com.mycheque.client.deserialize;
 
-import com.mycheque.client.ResponseBodyAttributes;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import com.mycheque.client.ResponseBodyAttributes;
 import com.mycheque.client.jsonstruct.DataWrapper;
 import com.mycheque.client.jsonstruct.ResponseStatusCode;
 

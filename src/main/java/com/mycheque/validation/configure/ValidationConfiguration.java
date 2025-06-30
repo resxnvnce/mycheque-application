@@ -43,16 +43,15 @@ public class ValidationConfiguration {
     /**
      * Returns the {@link LocalValidatorFactoryBean} using the custom validation message source.
      *
-     * @return the validator instance to be used.
+     * @return the validator factory instance to be used by Spring.
      */
     @Bean
     @BeanValidation
-    LocalValidatorFactoryBean getValidator() {
+    LocalValidatorFactoryBean getValidatorFactory() {
         final var validatorBean = new LocalValidatorFactoryBean();
 
-        validatorBean.setValidationMessageSource(
-                getMessageSource()
-        );
+        var msgSource = getMessageSource();
+        validatorBean.setValidationMessageSource(msgSource);
 
         return validatorBean;
     }

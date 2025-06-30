@@ -7,11 +7,12 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.lang.Nullable;
 
-import com.mycheque.domain.id.FiscalDataRecord;
-import com.mycheque.datatransfer.accept.ReceiptDefinition;
-
 import com.mycheque.util.Assert;
 import com.mycheque.util.local.RegExp;
+
+import com.mycheque.domain.id.FiscalDataRecord;
+
+import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
  * Certain utility methods working with {@link ReceiptDefinition}s.
@@ -53,7 +54,7 @@ public final class ReceiptDefinitionInterpreter {
      * @see #interpretIfPossible(ReceiptDefinition) 
      */
     public static List<ReceiptDefinition> interpretAllIfPossible(List<ReceiptDefinition> definitions) {
-        Assert.args(definitions != null, "definitions must not be null");
+        Assert.notNull(definitions, () -> "definitions must not be null");
         return definitions.stream().map(ReceiptDefinitionInterpreter::interpretIfPossible).toList();
     }
 
@@ -80,22 +81,18 @@ public final class ReceiptDefinitionInterpreter {
      * @return the {@code ReceiptDefinition.ByDetails} interpreted or {@code null}.
      */
     @Nullable
-    private static ReceiptDefinition.ByDetails interpretByQrRaw(final String qrraw) {
+    private static ReceiptDefinition.ByDetails interpretByQrRaw(String qrraw) {
         final String[] tokens = qrraw.substring(2).split("&\\w+=");
 
-        float total;
-        LocalDateTime timestamp;
-
         try {
-            total = Float.parseFloat(tokens[1]);
-            timestamp = LocalDateTime.parse(tokens[0], TIMESTAMP_FORMATTER);
+            var id = new FiscalDataRecord(tokens[2], tokens[3], tokens[4]);
+            var timestamp = LocalDateTime.parse(tokens[0], TIMESTAMP_FORMATTER);
+
+            return new ReceiptDefinition.ByDetails(id, Float.parseFloat(tokens[1]), timestamp);
         }
-        catch (Exception ex) {
+        catch (Exception ignored) {
             return null;
         }
-
-        FiscalDataRecord id = new FiscalDataRecord(tokens[2], tokens[3], tokens[4]);
-        return new ReceiptDefinition.ByDetails(id, total, timestamp);
     }
 
     /**

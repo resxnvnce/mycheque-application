@@ -1,6 +1,7 @@
 package com.mycheque.util;
 
 import java.util.Objects;
+import java.util.Collection;
 import java.util.function.Supplier;
 import java.util.function.BiFunction;
 
@@ -94,6 +95,52 @@ public final class Assert {
             String message = messageSupplier.get();
             throw new IllegalArgumentException(message);
         }
+    }
+
+    /**
+     * Assert that the given object, {@code o}, is not {@code null}.
+     *
+     * @param o       a nullable object to inspect.
+     * @param message the exception message to use if the assertion fails.
+     * @throws IllegalArgumentException if {@code o} is {@code null}.
+     */
+    public static void notNull(Object o, String message) throws IllegalArgumentException {
+        Assert.args(o != null, message);
+    }
+
+    /**
+     * Assert that the given object, {@code o}, is not {@code null}.
+     *
+     * @param o               a nullable object to inspect.
+     * @param messageSupplier a supplier for the exception message to use if the assertion fails.
+     * @throws IllegalArgumentException if {@code o} is {@code null}.
+     */
+    public static void notNull(Object o, Supplier<String> messageSupplier) throws IllegalArgumentException {
+        Assert.args(o != null, messageSupplier);
+    }
+
+    /**
+     * Assert that the given collection, {@code coll}, is not blank. That is,
+     * the collection is neither {@code null} nor {@linkplain Collection#isEmpty() empty}.
+     *
+     * @param coll    a {@link Collection} to inspect.
+     * @param message the exception message to use if the assertion fails.
+     * @throws IllegalArgumentException if {@code coll} is blank.
+     */
+    public static void notBlank(Collection<?> coll, String message) throws IllegalArgumentException {
+        Assert.args(!Iterables.isBlank(coll), message);
+    }
+
+    /**
+     * Assert that the given collection, {@code coll}, is not blank. That is,
+     * the collection is neither {@code null} nor {@linkplain Collection#isEmpty() empty}.
+     *
+     * @param coll            a {@link Collection} to inspect.
+     * @param messageSupplier a supplier for the exception message to use if the assertion fails.
+     * @throws IllegalArgumentException if {@code coll} is blank.
+     */
+    public static void notBlank(Collection<?> coll, Supplier<String> messageSupplier) throws IllegalArgumentException {
+        Assert.args(!Iterables.isBlank(coll), messageSupplier);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.mycheque.datatransfer.accept;
+package com.mycheque.datatransfer.profile;
 
 import java.util.Objects;
 import java.util.StringJoiner;

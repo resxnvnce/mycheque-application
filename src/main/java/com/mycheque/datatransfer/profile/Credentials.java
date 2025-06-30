@@ -1,37 +1,35 @@
-package com.mycheque.datatransfer.accept;
+package com.mycheque.datatransfer.profile;
 
 import java.util.function.Function;
 
 import jakarta.validation.Valid;
-
-import org.springframework.lang.Nullable;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * A data transfer object record accessing <i>an updated version</i> of a {@link Credentials}.
- * <p>
- * <b>NOTE:</b> a {@code null}-valued field must be treated as <i>"do not update me"</i>.
+ * A data transfer object record accessing a {@link com.mycheque.domain.Customer Customer} credentials.
  *
- * @param profile the customer's {@linkplain ProfileUpdate profile update}.
- * @param token   the customer's new third party token.
+ * @param profile the customer {@linkplain Profile profile}.
+ * @param token   the customer's third-party token.
  * @author resxnvnce
- * @see ProfileUpdate
+ * @see Profile
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CredentialsUpdate(
+public record Credentials(
 
         @JsonProperty("profile")
-        @Nullable
-        @Valid ProfileUpdate profile,
+        @NotNull(message = "{@not-null#Credentials.profile}")
+        @Valid Profile profile,
 
         @JsonProperty("token")
-        @Nullable
+        @NotBlank(message = "{@not-blank#Credentials.token}")
         String token) {
 
     /**
-     * Encode the {@link ProfileUpdate#getPassword() password}
+     * Encode the {@link Profile#getPassword() password}
      * using the supplied password-encoding function.
      *
      * @param passwordEncoder a {@link Function} to use for encoding.
