@@ -2,7 +2,7 @@ package com.mycheque.service.integrate;
 
 import java.util.Map;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.client.ClientTemplate;
 import com.mycheque.client.RequestBodyAttributes;
@@ -31,14 +31,8 @@ import com.mycheque.service.commons.PatchStateTracker;
  */
 public class OncePerHttpRequestIntegration extends AbstractOncePerRequestIntegration {
 
-    /**
-     * Map of {@code RequestBodyAttributesMappingStrategy} beans respectively to their definition method.
-     */
     private final Map<ReceiptDefinition.By, RequestBodyAttributesMappingStrategy> strategies;
 
-    /**
-     * The mapper supporting with resolving a {@link ClientEntity} to the actual {@link Receipt}.
-     */
     private final ClientEntityExtractor extractor;
 
     /**

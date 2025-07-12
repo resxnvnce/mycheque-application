@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.function.Supplier;
 import java.util.function.BiFunction;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * Assertion utility class that assists in validating arguments.

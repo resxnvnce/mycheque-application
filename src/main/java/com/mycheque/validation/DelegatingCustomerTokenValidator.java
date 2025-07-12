@@ -12,9 +12,6 @@ import org.springframework.validation.Errors;
  */
 public class DelegatingCustomerTokenValidator implements CustomerTokenValidator {
 
-    /**
-     * The template delegate.
-     */
     private final ClientTemplate delegate;
 
     /**
@@ -29,9 +26,10 @@ public class DelegatingCustomerTokenValidator implements CustomerTokenValidator 
     @Override
     public void validate(Object target, Errors errors) {
         final String token = (String) target;
-        boolean isTokenValid = delegate.canAuthorizeWith(token);
+        boolean isTokenValid = this.delegate.canAuthorizeWith(token);
 
-        if (!isTokenValid)
+        if (!isTokenValid) {
             errors.rejectValue("token", "@constraint.token#should-exist");
+        }
     }
 }

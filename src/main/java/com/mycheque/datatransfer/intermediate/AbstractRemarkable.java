@@ -12,14 +12,8 @@ import com.mycheque.datatransfer.query.ReceiptDefinition;
  */
 public abstract class AbstractRemarkable implements Remarkable {
 
-    /**
-     * The subject of this {@code Remarkable}.
-     */
     private final ReceiptDefinition subject;
 
-    /**
-     * The code of this {@code Remarkable}.
-     */
     private final PatchRemarkCode remarkCode;
 
     /**
@@ -37,12 +31,12 @@ public abstract class AbstractRemarkable implements Remarkable {
 
     @Override
     public ReceiptDefinition getSubject() {
-        return subject;
+        return this.subject;
     }
 
     @Override
     public PatchRemarkCode getRemarkCode() {
-        return remarkCode;
+        return this.remarkCode;
     }
 
     @Override
@@ -50,19 +44,20 @@ public abstract class AbstractRemarkable implements Remarkable {
         if (this == o) return true;
 
         return o instanceof AbstractRemarkable that
-                && Objects.equals(subject, that.subject)
-                && Objects.equals(remarkCode, that.remarkCode);
+                && Objects.equals(this.subject, that.subject)
+                && Objects.equals(this.remarkCode, that.remarkCode);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(subject, remarkCode);
+        return Objects.hash(this.subject, this.remarkCode);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", this.getClass() + "[", "]")
-                .add("subject=" + subject).add("remarkCode=" + remarkCode)
+                .add("subject=" + subject)
+                .add("remarkCode=" + remarkCode)
                 .toString();
     }
 }

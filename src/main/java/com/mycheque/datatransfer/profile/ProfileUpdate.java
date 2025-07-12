@@ -4,13 +4,12 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
-import org.springframework.lang.Nullable;
-
 import jakarta.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.mycheque.lang.Nullable;
 import com.mycheque.util.local.RegExp;
 
 /**
@@ -70,7 +69,7 @@ public class ProfileUpdate {
      */
     @Nullable
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     /**
@@ -89,7 +88,7 @@ public class ProfileUpdate {
      */
     @Nullable
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
@@ -105,8 +104,8 @@ public class ProfileUpdate {
     public boolean equals(Object obj) {
         if (obj == this) return true;
 
-        return obj instanceof ProfileUpdate update
-                && Objects.equals(this.username, update.username) && Objects.equals(this.password, update.password);
+        return obj instanceof ProfileUpdate update &&
+                Objects.equals(this.username, update.username) && Objects.equals(this.password, update.password);
     }
 
     @Override
@@ -117,7 +116,8 @@ public class ProfileUpdate {
     @Override
     public String toString() {
         return new StringJoiner(", ", this.getClass() + "[", "]")
-                .add("username=" + this.username).add("password=" + this.password)
+                .add("username=" + username)
+                .add("password=" + password)
                 .toString();
     }
 }

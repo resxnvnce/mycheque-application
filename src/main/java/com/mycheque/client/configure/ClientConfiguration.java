@@ -8,15 +8,12 @@ import org.springframework.web.client.RestClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
 /**
  * The client module configuration class.
  *
  * @author resxnvnce
  */
 @Configuration
-@EnableConfigurationProperties(ClientTemplateProperties.class)
 public class ClientConfiguration {
 
     /**
@@ -28,15 +25,12 @@ public class ClientConfiguration {
      * that provides the "Content-Length" header value with each request,
      * so there's no need to serialize the body into a byte array manually.
      *
-     * @param properties the {@link ClientTemplate} bean properties record.
      * @return the {@code RestClient} to be used by the default {@code ClientTemplate}.
      */
     @Bean
-    RestClient restClient(ClientTemplateProperties properties) {
+    RestClient restClient() {
         return RestClient.builder()
-                .baseUrl(
-                        properties.url()
-                )
+                .baseUrl("https://proverkacheka.com/api/v1/check/get")
                 .defaultHeader("Content-Type", "application/json")
                 .requestInterceptor(
                         (request, body, execution) -> {

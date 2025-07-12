@@ -1,6 +1,6 @@
 package com.mycheque.service;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * Base class for exceptions thrown by the {@link ReceiptService} in several cases.

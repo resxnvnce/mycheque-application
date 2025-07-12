@@ -12,9 +12,6 @@ import org.springframework.validation.Errors;
  */
 public class DelegatingUsernameNotTakenValidator implements UsernameNotTakenValidator {
 
-    /**
-     * The service delegate.
-     */
     private final CustomerService delegate;
 
     /**
@@ -29,9 +26,10 @@ public class DelegatingUsernameNotTakenValidator implements UsernameNotTakenVali
     @Override
     public void validate(Object target, Errors errors) {
         final String username = (String) target;
-        boolean isUsernameTaken = delegate.existsByUsername(username);
+        boolean isUsernameTaken = this.delegate.existsByUsername(username);
 
-        if (isUsernameTaken)
+        if (isUsernameTaken) {
             errors.rejectValue("profile.username", "@constraint.username#should-not-be-taken");
+        }
     }
 }

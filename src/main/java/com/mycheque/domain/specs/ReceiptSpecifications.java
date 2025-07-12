@@ -4,11 +4,10 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.criteria.Path;
 
+import com.mycheque.lang.Nullable;
 import com.mycheque.domain.Receipt;
 import com.mycheque.domain.Customer;
 import com.mycheque.domain.id.FiscalDataRecord;
-
-import org.springframework.lang.Nullable;
 
 import org.springframework.data.jpa.domain.Specification;
 

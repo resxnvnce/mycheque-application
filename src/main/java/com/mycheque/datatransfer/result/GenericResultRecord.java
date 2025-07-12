@@ -1,6 +1,6 @@
 package com.mycheque.datatransfer.result;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * The default {@link GenericResult} implementation.

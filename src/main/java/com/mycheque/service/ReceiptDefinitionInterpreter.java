@@ -5,7 +5,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.util.Assert;
 import com.mycheque.util.local.RegExp;
@@ -21,9 +21,6 @@ import com.mycheque.datatransfer.query.ReceiptDefinition;
  */
 public final class ReceiptDefinitionInterpreter {
 
-    /**
-     * The {@code DateTimeFormatter} for parsing timestamps from raw QR codes.
-     */
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmm");
 
     /**

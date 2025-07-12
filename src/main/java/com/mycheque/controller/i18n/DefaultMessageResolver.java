@@ -21,9 +21,6 @@ import com.mycheque.datatransfer.intermediate.PatchRemarkCode;
 @Component
 public class DefaultMessageResolver implements MessageResolver {
 
-    /**
-     * The underlying {@code MessageSource}.
-     */
     private final MessageSource source;
 
     /**

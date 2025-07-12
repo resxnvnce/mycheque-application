@@ -2,9 +2,10 @@ package com.mycheque.service.commons;
 
 import java.util.Objects;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.domain.Receipt;
+
 import com.mycheque.datatransfer.query.ReceiptDefinition;
 
 /**
@@ -14,24 +15,12 @@ import com.mycheque.datatransfer.query.ReceiptDefinition;
  */
 public final class DefaultPatchStateTracker implements PatchStateTracker {
 
-    /**
-     * @see PatchStateTracker#toSource()
-     */
     private final ReceiptDefinition source;
 
-    /**
-     * @see PatchStateTracker#isPersistent()
-     */
     private boolean isPersistent = false;
 
-    /**
-     * @see PatchStateTracker#getIntermediateState()
-     */
     private @Nullable ReceiptDefinition intermediate;
 
-    /**
-     * @see PatchStateTracker#getEntityState()
-     */
     private @Nullable Receipt entity;
 
     /**

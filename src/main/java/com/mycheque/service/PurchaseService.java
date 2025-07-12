@@ -3,7 +3,7 @@ package com.mycheque.service;
 import java.util.List;
 import java.util.Collection;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.domain.Purchase;
 import com.mycheque.domain.id.FiscalDataRecord;

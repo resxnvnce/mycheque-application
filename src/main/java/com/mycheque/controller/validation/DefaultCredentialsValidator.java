@@ -24,14 +24,8 @@ import static com.mycheque.util.Lambdas.applyOrNull;
 @Component
 public class DefaultCredentialsValidator implements CredentialsValidator {
 
-    /**
-     * Rejects non-existing tokens.
-     */
     private final CustomerTokenValidator customerTokenValidator;
 
-    /**
-     * Rejects already existing usernames.
-     */
     private final UsernameNotTakenValidator usernameNotTakenValidator;
 
     /**
@@ -77,14 +71,6 @@ public class DefaultCredentialsValidator implements CredentialsValidator {
         return !errors.hasErrors();
     }
 
-    /**
-     * Performs the {@code action} over a new value in case it's not {@code null}
-     * and isn't {@linkplain Object#equals equal} to the corresponding old value.
-     *
-     * @param oldValue the old value.
-     * @param newValue the new value.
-     * @param action   the action to be performed over {@code newValue}.
-     */
     private <T> void acceptIfUpdatable(Object oldValue, T newValue, Consumer<? super T> action) {
         boolean isUpdatable = newValue != null && !newValue.equals(oldValue);
 

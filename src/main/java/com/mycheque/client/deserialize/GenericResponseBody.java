@@ -16,11 +16,6 @@ import com.mycheque.client.jsonstruct.ResponseStatusCode;
  */
 record GenericResponseBody<T>(T data, ResponseStatusCode code) implements ResponseBodyAttributes<T> {
 
-    /**
-     * Delegate constructor. Used internally by Jackson library.
-     *
-     * @param data the target entity {@linkplain DataWrapper wrapper}.
-     */
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     GenericResponseBody(DataWrapper<T> data, ResponseStatusCode code) {
         this(data.unwrap(), code);

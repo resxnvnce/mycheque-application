@@ -1,14 +1,15 @@
 package com.mycheque.service.observer.support;
 
-import org.springframework.lang.Nullable;
-import org.springframework.data.jpa.domain.Specification;
-
-import com.mycheque.datatransfer.query.ReceiptQuery;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.domain.Receipt;
 import com.mycheque.domain.specs.ReceiptSpecifications;
 
+import com.mycheque.datatransfer.query.ReceiptQuery;
+
 import com.mycheque.service.observer.SpecificationObserver;
+
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * The list of {@link ReceiptQuery} property observers.

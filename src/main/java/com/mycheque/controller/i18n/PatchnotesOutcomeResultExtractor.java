@@ -2,9 +2,9 @@ package com.mycheque.controller.i18n;
 
 import java.util.Locale;
 
-import org.springframework.lang.Nullable;
-
+import com.mycheque.lang.Nullable;
 import com.mycheque.util.core.ConditionalChained;
+
 import com.mycheque.service.wrapper.PatchnotesOutcome;
 import com.mycheque.datatransfer.result.GenericResult;
 

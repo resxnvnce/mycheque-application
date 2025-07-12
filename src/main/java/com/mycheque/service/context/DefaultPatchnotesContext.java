@@ -26,24 +26,12 @@ import com.mycheque.datatransfer.intermediate.Remarkable;
 public final class DefaultPatchnotesContext extends AbstractRemarkablesCollector
         implements PatchnotesContext {
 
-    /**
-     * @see #getCustomer()
-     */
     private final Customer customer;
 
-    /**
-     * @see #getPatchnotes()
-     */
     private final Patchnotes patchnotes;
 
-    /**
-     * @see #getIdentifiers()
-     */
     private Set<FiscalDataRecord> identifiers;
 
-    /**
-     * @see #getStateTrackers()
-     */
     private Set<PatchStateTracker> stateTrackers;
 
     /**
@@ -56,11 +44,6 @@ public final class DefaultPatchnotesContext extends AbstractRemarkablesCollector
         this.patchnotes = wrapper.object();
     }
 
-    /**
-     * Returns the {@code Remarkable}s collected, filtering out all the {@code 1xx Warning}s.
-     *
-     * @return all the {@code Remarkable}s collected, except for warnings.
-     */
     private Set<Remarkable> toNon1xxWarningRemarkables() {
         return this.remarkables.stream()
                 .filter(r -> !r.getRemarkCode().is1xxWarning())

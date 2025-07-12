@@ -2,12 +2,11 @@ package com.mycheque.client.serialize;
 
 import java.time.LocalDateTime;
 
-import org.springframework.lang.Nullable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.mycheque.lang.Nullable;
 import com.mycheque.client.RequestBodyAttributes;
 import com.mycheque.client.jsonstruct.FiscalIdentifier;
 

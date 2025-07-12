@@ -3,6 +3,8 @@ package com.mycheque.domain;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import com.mycheque.lang.Nullable;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
@@ -16,13 +18,13 @@ import jakarta.persistence.GenerationType;
 
 import com.mycheque.mapping.support.Default;
 
+import com.mycheque.datatransfer.result.MutationDescription;
+
 import com.mycheque.util.hibernate6.NamedEnum;
 import com.mycheque.util.hibernate6.HibernateProxiesAware;
 
-import com.mycheque.datatransfer.result.MutationDescription;
-
-import org.springframework.lang.Nullable;
 import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -50,13 +52,13 @@ public @Entity class Customer implements HibernateProxiesAware {
      * The username, which is unique among all the {@code Customers}
      * and may be changed over time.
      */
-    @Column(name = "username", unique = true, nullable = false, length = 31)
+    @Column(name = "username", unique = true, nullable = false, length = 30)
     private String username;
 
     /**
      * The user password, which is always stored in an encrypted form.
      */
-    @Column(name = "password", nullable = false, length = 63)
+    @Column(name = "password", nullable = false, length = 31)
     private String password;
 
     /**
@@ -279,6 +281,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      *
      * @return the receipts of this {@code Customer}.
      */
+    @Nullable
     public Set<Receipt> getReceipts() {
         return this.receipts;
     }

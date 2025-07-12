@@ -98,8 +98,8 @@ public class Profile {
     public boolean equals(Object obj) {
         if (obj == this) return true;
 
-        return obj instanceof Profile profile
-                && this.username.equals(profile.username) && this.password.equals(profile.password);
+        return obj instanceof Profile profile &&
+                this.username.equals(profile.username) && this.password.equals(profile.password);
     }
 
     @Override
@@ -110,7 +110,8 @@ public class Profile {
     @Override
     public String toString() {
         return new StringJoiner(", ", this.getClass() + "[", "]")
-                .add("username=" + this.username).add("password=" + this.password)
+                .add("username=" + username)
+                .add("password=" + password)
                 .toString();
     }
 }

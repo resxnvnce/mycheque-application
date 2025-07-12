@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import jakarta.validation.Valid;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

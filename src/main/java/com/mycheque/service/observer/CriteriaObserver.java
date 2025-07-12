@@ -1,6 +1,7 @@
 package com.mycheque.service.observer;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
+
 import org.springframework.data.mongodb.core.query.Criteria;
 
 /**

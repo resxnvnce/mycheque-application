@@ -2,7 +2,7 @@ package com.mycheque.controller.support;
 
 import java.util.Locale;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.controller.i18n.MessageResolver;
 import com.mycheque.controller.i18n.PatchnotesOutcomeResultExtractor;
@@ -53,8 +53,7 @@ public abstract class AbstractPatchnotesOutcomeResultExtractor implements Patchn
     }
 
     @Override
-    @Nullable
-    public final GenericResult extract(PatchnotesOutcome outcome, Locale locale) {
+    public final @Nullable GenericResult extract(PatchnotesOutcome outcome, Locale locale) {
         return matches(outcome) ? extractMatching(outcome, locale) : null;
     }
 

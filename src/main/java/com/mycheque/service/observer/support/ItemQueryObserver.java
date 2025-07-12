@@ -1,11 +1,12 @@
 package com.mycheque.service.observer.support;
 
-import org.springframework.lang.Nullable;
-import org.springframework.data.mongodb.core.query.Criteria;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.datatransfer.query.ItemQuery;
 
 import com.mycheque.service.observer.CriteriaObserver;
+
+import org.springframework.data.mongodb.core.query.Criteria;
 
 /**
  * The list of {@link ItemQuery} property observers.

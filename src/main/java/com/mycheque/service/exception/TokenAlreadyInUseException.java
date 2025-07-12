@@ -1,6 +1,6 @@
 package com.mycheque.service.exception;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.service.CustomerServiceException;
 
@@ -13,9 +13,6 @@ import com.mycheque.service.CustomerServiceException;
  */
 public class TokenAlreadyInUseException extends CustomerServiceException {
 
-    /**
-     * The token being already in use.
-     */
     private final String token;
 
     /**

@@ -1,8 +1,9 @@
 package com.mycheque.domain;
 
 import java.util.StringJoiner;
-
 import java.time.LocalDateTime;
+
+import com.mycheque.lang.Nullable;
 
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
@@ -14,14 +15,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.AttributeOverride;
 
-import org.springframework.lang.Nullable;
-import org.springframework.data.domain.Persistable;
-
 import com.mycheque.mapping.support.Default;
 
 import com.mycheque.domain.id.FiscalDataRecord;
 
 import com.mycheque.util.hibernate6.HibernateProxiesAware;
+
+import org.springframework.data.domain.Persistable;
 
 /**
  * An entity representing a receipt, either a paper one or an electronic one.
@@ -244,11 +244,11 @@ public @Entity class Receipt implements HibernateProxiesAware, Persistable<Fisca
     @Override
     public String toString() {
         return new StringJoiner(", ", Receipt.class.getSimpleName() + "[", "]")
-                .add("id=" + this.id)
-                .add("total=" + this.total)
-                .add("purchase=" + this.purchase)
-                .add("timestamp=" + this.timestamp)
-                .add("foundation='" + this.foundation + "'")
+                .add("id=" + id)
+                .add("total=" + total)
+                .add("purchase=" + purchase)
+                .add("timestamp=" + timestamp)
+                .add("foundation='" + foundation + "'")
                 .toString();
     }
 }

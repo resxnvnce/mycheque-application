@@ -1,6 +1,6 @@
 package com.mycheque.client;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * Base class for exceptions thrown by the {@link ClientTemplate} in case a request fails.

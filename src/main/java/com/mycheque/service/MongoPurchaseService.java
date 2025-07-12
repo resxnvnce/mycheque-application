@@ -5,8 +5,6 @@ import java.util.Objects;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.springframework.lang.Nullable;
-
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import com.mycheque.util.Assert;
 import com.mycheque.util.Lambdas;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.domain.Purchase;
 import com.mycheque.domain.id.FiscalDataRecord;
@@ -32,9 +31,6 @@ import com.mycheque.service.observer.support.ItemQueryObserver;
 @Service
 public class MongoPurchaseService implements PurchaseService {
 
-    /**
-     * The <i>MongoDB</i> data source accessor.
-     */
     private final MongoTemplate template;
 
     /**

@@ -35,13 +35,6 @@ public class RestControllerConfiguration {
         return resolverBean;
     }
 
-    /**
-     * Parse the given language tags into the matching {@link Locale}s.
-     *
-     * @param languageTags the language tags.
-     * @return the {@code Locale}s that best represent the language tags.
-     * @see Locale#forLanguageTag(String)
-     */
     private List<Locale> getLocales(String... languageTags) {
         return Stream.of(languageTags).distinct().map(Locale::forLanguageTag).toList();
     }

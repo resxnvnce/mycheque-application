@@ -15,9 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class DelegatingCustomerDetails implements UserDetails {
 
-    /**
-     * The entity delegate.
-     */
     private final Customer delegate;
 
     /**
@@ -35,12 +32,12 @@ public class DelegatingCustomerDetails implements UserDetails {
      * @return the underlying {@link Customer} entity.
      */
     public Customer getDelegate() {
-        return delegate;
+        return this.delegate;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        final GrantedAuthority role = delegate.getRole();
+        final GrantedAuthority role = this.delegate.getRole();
 
         /* For now, each Customer does only have one role, defining
          * the set of authorities (i.e. the API endpoints they have access to).
@@ -52,11 +49,11 @@ public class DelegatingCustomerDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return delegate.getPassword();
+        return this.delegate.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return delegate.getUsername();
+        return this.delegate.getUsername();
     }
 }

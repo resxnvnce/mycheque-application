@@ -1,13 +1,13 @@
 package com.mycheque.client;
 
-import org.springframework.lang.Nullable;
-
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ParameterizedTypeReference;
 
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.ResourceAccessException;
+
+import com.mycheque.lang.Nullable;
 
 import static com.mycheque.util.Lambdas.applyOrNull;
 
@@ -18,9 +18,6 @@ import static com.mycheque.util.Lambdas.applyOrNull;
  */
 public class DefaultClientTemplate implements ClientTemplate {
 
-    /**
-     * The underlying HTTP client component.
-     */
     private final RestClient client;
 
     /**
@@ -43,11 +40,14 @@ public class DefaultClientTemplate implements ClientTemplate {
      */
     @Nullable
     protected <T> ResponseBodyAttributes<?> doPost(RequestBodyAttributes attrs, Class<T> entityType) {
-        return client.post().body(attrs).retrieve().body(ParameterizedTypeReference.
-                forType(ResolvableType.
-                        forClassWithGenerics(ResponseBodyAttributes.class, entityType).getType()
-                )
-        );
+        return this.client.post().body(attrs)
+                .retrieve()
+                .body(
+                        ParameterizedTypeReference.forType(
+                                ResolvableType.forClassWithGenerics(ResponseBodyAttributes.class, entityType)
+                                        .getType()
+                        )
+                );
     }
 
     @Nullable
@@ -74,14 +74,6 @@ public class DefaultClientTemplate implements ClientTemplate {
         return applyOrNull(postForAttributes(attrs, entityType), this::rejectAnyError);
     }
 
-    /**
-     * Reject the given response in case it {@linkplain ResponseBodyAttributes#haveError() has an error},
-     * throwing an appropriate exception, or return the response, casting to the requested type, otherwise.
-     *
-     * @param attrs the response to inspect.
-     * @return the response, downcasted to the requested type.
-     * @throws ResponseStatusCodeException if the response indeed contains an error.
-     */
     @SuppressWarnings("unchecked")
     private <T> ResponseBodyAttributes<T> rejectAnyError(ResponseBodyAttributes<?> attrs) {
         final boolean isRejected = attrs.haveError();

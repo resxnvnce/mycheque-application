@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.lang.Nullable;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.mycheque.util.Maps;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.domain.Receipt;
 import com.mycheque.domain.id.FiscalDataRecord;
@@ -53,29 +53,14 @@ import com.mycheque.service.integrate.OncePerRequestIntegrationProvider;
 @AllArgsConstructor // the constructor might be too large
 public class TransactionalReceiptService implements ReceiptService {
 
-    /**
-     * The {@code Purchase} collection service.
-     */
     private final PurchaseService purchaseService;
 
-    /**
-     * The accessor of the {@link Receipt}s persistence store.
-     */
     private final ReceiptRepository receiptRepository;
 
-    /**
-     * The accessor of the {@code Purchase}s persistence store.
-     */
     private final PurchaseRepository purchaseRepository;
 
-    /**
-     * A {@link PatchStateTracker} filter bean.
-     */
     private final PatchStateTrackerFilter trackerFilter;
 
-    /**
-     * A {@link OncePerRequestIntegration} prototype bean factory.
-     */
     private final OncePerRequestIntegrationProvider integrationProvider;
 
     @Override
@@ -221,12 +206,6 @@ public class TransactionalReceiptService implements ReceiptService {
         context.stealAll(integration);
     }
 
-    /**
-     * Convert the integration layer exception into a {@link ReceiptServiceException}.
-     *
-     * @param cte an exception thrown by the integration layer.
-     * @return a service exception.
-     */
     private ReceiptServiceException toReceiptServiceException(ClientTemplateException cte) {
         if (cte instanceof ResponseStatusCodeException.Unauthorized) {
             return new ObsoleteTokenException("Could not use the context customer's token.", cte);
@@ -235,12 +214,6 @@ public class TransactionalReceiptService implements ReceiptService {
         return new IntegrationException(cte);
     }
 
-    /**
-     * Returns a {@link OncePerRequestIntegration} to be used within the current patchnotes context.
-     *
-     * @param context a patchnotes context to evaluate an integration within.
-     * @return an integration prototype bean.
-     */
     private OncePerRequestIntegration toOncePerRequestIntegration(PatchnotesContext context) {
         final var attributesFactory = RequestBodyAttributes.factory(
                 context.getCustomer().getThirdpartyToken()

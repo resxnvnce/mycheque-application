@@ -2,7 +2,7 @@ package com.mycheque.datatransfer.intermediate;
 
 import java.util.Map;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import static com.mycheque.util.Maps.mapToIdentity;
 
@@ -62,19 +62,10 @@ public enum PatchRemark implements PatchRemarkCode {
         FAILURE;
     }
 
-    /**
-     * The {@linkplain #value() value}-to-{@code PatchRemark} mapping.
-     */
     private static final Map<Integer, PatchRemark> RESOLVER = mapToIdentity(PatchRemark.class, PatchRemark::value);
 
-    /**
-     * The integer value of this patch remark.
-     */
     private final int value;
 
-    /**
-     * The remark series.
-     */
     private final Series series;
 
     @Override
@@ -89,7 +80,7 @@ public enum PatchRemark implements PatchRemarkCode {
 
     @Override
     public int value() {
-        return value;
+        return this.value;
     }
 
     /**
@@ -99,7 +90,7 @@ public enum PatchRemark implements PatchRemarkCode {
      * @see PatchRemark.Series
      */
     public Series series() {
-        return series;
+        return this.series;
     }
 
     /**
@@ -113,12 +104,6 @@ public enum PatchRemark implements PatchRemarkCode {
         return RESOLVER.get(code);
     }
 
-    /**
-     * Constructs a new patch remark that must have a unique code to be properly mapped.
-     *
-     * @param value  the corresponding unique code for this instance.
-     * @param series the patch remark series.
-     */
     PatchRemark(int value, Series series) {
         this.value = value;
         this.series = series;

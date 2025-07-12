@@ -2,7 +2,7 @@ package com.mycheque.client.jsonstruct;
 
 import java.util.Map;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import static com.mycheque.util.Maps.mapToIdentity;
 
@@ -42,19 +42,10 @@ public enum StatusCode implements ResponseStatusCode {
      */
     UNAUTHORIZED(401, "Invalid Authorization Token");
 
-    /**
-     * The {@linkplain #value() value}-to-{@code StatusCode} mapping.
-     */
     private static final Map<Integer, StatusCode> RESOLVER = mapToIdentity(StatusCode.class, StatusCode::value);
 
-    /**
-     * {@code StatusCode} deserialization value.
-     */
     private final int value;
 
-    /**
-     * Short phrase describing the reason this {@code StatusCode} appears.
-     */
     private final String reason;
 
     @Override
@@ -64,7 +55,7 @@ public enum StatusCode implements ResponseStatusCode {
 
     @Override
     public int value() {
-        return value;
+        return this.value;
     }
 
     /**
@@ -75,7 +66,7 @@ public enum StatusCode implements ResponseStatusCode {
      *         the reason this {@code StatusCode} appears.
      */
     public String reason() {
-        return reason;
+        return this.reason;
     }
 
     /**
@@ -89,14 +80,6 @@ public enum StatusCode implements ResponseStatusCode {
         return RESOLVER.get(code);
     }
 
-    /**
-     * Constructs a new instance of {@code StatusCode} that must have
-     * a unique identifier to be properly deserialized.
-     *
-     * @param value  the corresponding unique identifier for this instance.
-     * @param reason a brief description of the reason
-     *               this {@code StatusCode} appears.
-     */
     StatusCode(int value, String reason) {
         this.value = value;
         this.reason = reason;

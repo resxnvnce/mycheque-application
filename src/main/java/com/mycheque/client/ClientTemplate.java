@@ -1,7 +1,6 @@
 package com.mycheque.client;
 
-import org.springframework.lang.Nullable;
-
+import com.mycheque.lang.Nullable;
 import com.mycheque.client.jsonstruct.StatusCode;
 import com.mycheque.client.jsonstruct.ResponseStatusCode;
 

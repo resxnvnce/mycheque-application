@@ -1,6 +1,6 @@
 package com.mycheque.service.exception;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 import com.mycheque.service.ReceiptServiceException;
 

@@ -1,6 +1,6 @@
 package com.mycheque.client;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * Exception thrown by the {@link ClientTemplate} if it's unable to perform
@@ -11,11 +11,8 @@ import org.springframework.lang.Nullable;
  */
 public class RequestAttributesException extends ClientTemplateException {
 
-    /**
-     * The {@code RequestBodyAttributes} which
-     * caused this exception to be thrown.
-     */
-    private final @Nullable RequestBodyAttributes attrs;
+    @Nullable
+    private final RequestBodyAttributes attrs;
 
     /**
      * Constructs a new {@code RequestAttributesException} with the specified
@@ -24,8 +21,9 @@ public class RequestAttributesException extends ClientTemplateException {
      * @param attrs   the attributes of the request body.
      * @param message the detail message.
      */
-    public RequestAttributesException(@Nullable RequestBodyAttributes attrs,
-                                      String message) {
+    public RequestAttributesException(
+            @Nullable RequestBodyAttributes attrs, String message) {
+
         super(message);
         this.attrs = attrs;
     }
@@ -38,8 +36,9 @@ public class RequestAttributesException extends ClientTemplateException {
      * @param message the detail message.
      * @param cause   the root cause.
      */
-    public RequestAttributesException(@Nullable RequestBodyAttributes attrs,
-                                      String message, @Nullable Throwable cause) {
+    public RequestAttributesException(
+            @Nullable RequestBodyAttributes attrs, String message, @Nullable Throwable cause) {
+
         super(message, cause);
         this.attrs = attrs;
     }
@@ -52,6 +51,6 @@ public class RequestAttributesException extends ClientTemplateException {
      */
     @Nullable
     public RequestBodyAttributes getAttrs() {
-        return attrs;
+        return this.attrs;
     }
 }

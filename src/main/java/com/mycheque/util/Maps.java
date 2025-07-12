@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.util.function.Function;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * Miscellaneous {@link Map} utility methods.

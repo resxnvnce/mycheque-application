@@ -2,7 +2,7 @@ package com.mycheque.util;
 
 import java.util.Collection;
 
-import org.springframework.lang.Nullable;
+import com.mycheque.lang.Nullable;
 
 /**
  * Miscellaneous {@link Iterable} utility methods.

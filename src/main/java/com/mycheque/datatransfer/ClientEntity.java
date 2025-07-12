@@ -10,56 +10,44 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * A data transfer object record acting as a target entity for the {@link
- * com.mycheque.client.ClientTemplate ClientTemplate} interface retrieval methods.
+ * A data transfer object record acting as a target entity
+ * for the {@code ClientTemplate} interface retrieval methods.
  *
- * @param id         the entity identifier.
- * @param items      a set of the {@linkplain Item items} acquired.
+ * @param id         an entity identifier.
  * @param total      the total cash sum, <strong>in kopecks</strong>.
  * @param foundation the retail outlets network.
  * @param timestamp  the purchase transaction date-time, no time-zone.
+ * @param items      a set of the {@linkplain Item items} acquired.
  * @author resxnvnce
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record ClientEntity(FiscalDataRecord id, Set<Item> items,
-                           Integer total, String foundation, LocalDateTime timestamp) {
+public record ClientEntity(
+        FiscalDataRecord id, Integer total, String foundation, LocalDateTime timestamp, Set<Item> items) {
 
     /**
-     * Part of a target entity, representing a single item from purchase.
+     * A purchase position.
      *
-     * @param name  the item name, unchanged by any means.
-     * @param price the item price per unit of measure.
-     * @param total the item total cost, i.e. its price multiplied by the quantity.
+     * @param name  the position name.
+     * @param price the price per one unit.
+     * @param total the position cost.
      */
     public record Item(
             @JsonProperty("name")
             String name,
-
             @JsonProperty("price")
             Integer price,
-
             @JsonProperty("sum")
             Integer total) {
-
-        /* Jackson should use the only available @JsonCreator: the canonical constructor. */
     }
 
-    /**
-     * The factory method used for deserialization.
-     */
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     static ClientEntity fromJsonProperties(
             @JsonProperty("fiscalDriveNumber")
             String fn,
-
             @JsonProperty("fiscalDocumentNumber")
             String fd,
-
             @JsonProperty("fiscalSign")
             String fp,
-
-            @JsonProperty("items")
-            Set<Item> items,
 
             @JsonProperty("totalSum")
             Integer total,
@@ -68,8 +56,11 @@ public record ClientEntity(FiscalDataRecord id, Set<Item> items,
             String foundation,
 
             @JsonProperty("dateTime")
-            LocalDateTime timestamp) {
+            LocalDateTime timestamp,
 
-        return new ClientEntity(new FiscalDataRecord(fn, fd, fp), items, total, foundation, timestamp);
+            @JsonProperty("items")
+            Set<Item> items) {
+
+        return new ClientEntity(new FiscalDataRecord(fn, fd, fp), total, foundation, timestamp, items);
     }
 }

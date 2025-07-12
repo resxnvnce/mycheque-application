@@ -20,9 +20,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     /**
      * The <b>JPQL</b> query template to use within the {@link #forceUpdate(Customer)} method.
      */
-    String FORCE_UPDATE_JPQL = "update Customer c set c.thirdpartyToken = :#{#updated.thirdpartyToken},"
-            + " c.username = :#{#updated.username}, c.password = :#{#updated.password},"
-            + " c.role = :#{#updated.role} where c.id = :#{#updated.id}";
+    String FORCE_UPDATE_JPQL = "update Customer c set "
+            + "c.role = :#{#updated.role}, "
+            + "c.username = :#{#updated.username}, "
+            + "c.password = :#{#updated.password}, "
+            + "c.thirdpartyToken = :#{#updated.thirdpartyToken} where c.id = :#{#updated.id}";
 
     /**
      * Retrieves a {@code Customer} by its {@linkplain Customer#getUsername() username}.

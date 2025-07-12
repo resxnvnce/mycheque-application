@@ -29,15 +29,8 @@ import com.mycheque.service.exception.TokenAlreadyInUseException;
 @Transactional(readOnly = true)
 public class TransactionalCustomerService implements CustomerService {
 
-    /**
-     * The mapper to convert from the data transfer objects to an
-     * actual {@code Customer} and to apply updates on existing entities.
-     */
     private final CustomerMapper customerMapper;
 
-    /**
-     * The repository.
-     */
     private final CustomerRepository customerRepository;
 
     /**

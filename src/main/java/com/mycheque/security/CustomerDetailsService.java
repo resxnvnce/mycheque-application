@@ -17,9 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Service
 public class CustomerDetailsService implements UserDetailsService {
 
-    /**
-     * The service delegate.
-     */
     private final CustomerService service;
 
     /**
@@ -32,18 +29,13 @@ public class CustomerDetailsService implements UserDetailsService {
         this.service = service;
     }
 
-    /**
-     * Get the {@link UsernameNotFoundException} to throw if the service couldn't locate a customer.
-     *
-     * @return an exception indicating that the customer with the given username does not exist.
-     */
     private UsernameNotFoundException getUsernameNotFoundException() {
         return new UsernameNotFoundException("Could not find a customer by the username provided.");
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return service.findByUsername(username).map(DelegatingCustomerDetails::new)
+        return this.service.findByUsername(username).map(DelegatingCustomerDetails::new)
                 .orElseThrow(this::getUsernameNotFoundException);
     }
 }

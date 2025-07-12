@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: mycheque
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+  datasource:
+    url: ${JDBC_URL}
+    username: ${PG_USERNAME}
+    password: ${PG_PASSWORD}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false

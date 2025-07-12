@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
  * @author resxnvnce
  */
 @SpringBootApplication
-@ConfigurationPropertiesScan(basePackages = "com.mycheque.client.configure")
+@ConfigurationPropertiesScan
 public class MyChequeApplication {
 
     public static void main(String[] args) {

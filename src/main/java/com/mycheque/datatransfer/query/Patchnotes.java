@@ -22,15 +22,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author resxnvnce
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Patchnotes(
-        boolean enable1xxWarnings,
+public record Patchnotes(boolean enable1xxWarnings, List<ReceiptDefinition> patches) {
 
-        @NotEmpty(message = "{@not-empty#Patchnotes.patches}")
-        List<@Valid ReceiptDefinition> patches) {
-
-    /**
-     * The factory method used for deserialization.
-     */
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     static Patchnotes fromJsonProperties(
 
@@ -39,7 +32,8 @@ public record Patchnotes(
             Boolean warningsEnabled,
 
             @JsonProperty("patches")
-            List<ReceiptDefinition> patches) {
+            @NotEmpty(message = "{@not-empty#Patchnotes.patches}")
+            List<@Valid ReceiptDefinition> patches) {
 
         return new Patchnotes(warningsEnabled != null && warningsEnabled, patches);
     }
