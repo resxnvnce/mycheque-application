@@ -13,6 +13,8 @@ import com.mycheque.validation.configure.BeanValidation;
 import com.mycheque.datatransfer.intermediate.PatchRemark;
 import com.mycheque.datatransfer.intermediate.PatchRemarkCode;
 
+import com.mycheque.service.exception.TokenAlreadyInUseException;
+
 /**
  * The default {@link MessageResolver} implementation.
  *
@@ -98,6 +100,13 @@ public class DefaultMessageResolver implements MessageResolver {
     @Override
     public String onEmptyResult(Locale locale) {
         return getMessageNoArgs("@scenario.empty-result", locale);
+    }
+
+    /* Exceptions */
+
+    @Override
+    public String onException(TokenAlreadyInUseException exception, Locale locale) {
+        return getMessageNoArgs("@exception.token-already-in-use", locale);
     }
 
     /* Customer endpoints */

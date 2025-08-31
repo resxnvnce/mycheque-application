@@ -11,7 +11,7 @@ import com.mycheque.domain.Receipt;
 import com.mycheque.domain.Customer;
 import com.mycheque.domain.id.FiscalDataRecord;
 
-import com.mycheque.repository.ReceiptRepository;
+import com.mycheque.repository.jpa.ReceiptRepository;
 
 import com.mycheque.service.commons.PatchStateTracker;
 import com.mycheque.service.context.PatchnotesContext;

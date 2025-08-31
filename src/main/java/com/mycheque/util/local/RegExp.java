@@ -15,7 +15,7 @@ public interface RegExp {
     /**
      * The regular expression any valid username must match.
      */
-    String USERNAME = "^[a-zA-Z][a-zA-Z0-9_]{2,29}$";
+    String USERNAME = "^[a-zA-Z][a-zA-Z0-9_]{3,30}$";
 
     /**
      * The regular expression any valid password must match.

@@ -1,6 +1,6 @@
-package com.mycheque.client.configure;
+package com.mycheque.test.configure;
 
-import com.mycheque.test.properties.ClientTestProperties;
+import com.mycheque.client.configure.ClientConfiguration;
 
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
@@ -17,5 +17,5 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @Profile("test")
 @Configuration
 @EnableConfigurationProperties(ClientTestProperties.class)
-public class ClientTestsConfiguration {
+public class ClientTestConfiguration {
 }

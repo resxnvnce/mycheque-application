@@ -6,6 +6,8 @@ import org.springframework.validation.Errors;
 
 import com.mycheque.datatransfer.intermediate.PatchRemarkCode;
 
+import com.mycheque.service.exception.TokenAlreadyInUseException;
+
 /**
  * Utility interface to resolve localized messages for common scenarios.
  *
@@ -22,6 +24,17 @@ public interface MessageResolver {
      * @return a message describing that a query returned no result.
      */
     String onEmptyResult(Locale locale);
+
+    /* Exceptions */
+
+    /**
+     * Resolve a message explaining the {@code TokenAlreadyInUseException} thrown.
+     *
+     * @param exception an {@code Exception} to transform into a user-friendly message.
+     * @param locale    the {@link Locale} in which to do the lookup.
+     * @return a displayable message explaining the exception encountered.
+     */
+    String onException(TokenAlreadyInUseException exception, Locale locale);
 
     /* Customer Endpoints */
 

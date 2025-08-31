@@ -71,7 +71,7 @@ public interface PatchnotesContext extends RemarkablesCollector {
      *         {@code false} otherwise.
      */
     default boolean has1xxWarningsEnabled() {
-        return getPatchnotes().enable1xxWarnings();
+        return getPatchnotes().shouldDisplay1xxWarnings();
     }
 
     /**

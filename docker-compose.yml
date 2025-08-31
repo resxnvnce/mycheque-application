@@ -1,0 +1,64 @@
+volumes:
+  mongo_data:
+    name: mycheque-volumes-mongo-data
+  mongo_config:
+    name: mycheque-volumes-mongo-config
+  postgres_data:
+    name: mycheque-volumes-postgres-data
+
+networks:
+  default:
+    name: mycheque-networks-default
+
+services:
+  app:
+    image: resxnvnce/mycheque-application:latest
+    depends_on:
+      mongo:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      JDBC_URL: jdbc:postgresql://postgres:5432/mycheque
+      MONGO_URI: mongodb://mongo:pwd@mongo:27017/mycheque?authSource=admin
+      PG_USERNAME: postgres
+      PG_PASSWORD: pwd
+    ports:
+      - "8080:8080"
+    container_name: mycheque-containers-app
+
+  mongo:
+    image: mongo:4
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    hostname: mongo
+    environment:
+      MONGO_INITDB_DATABASE: mycheque
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: pwd
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/mycheque --quiet
+      retries: 5
+      timeout: 3s
+      interval: 5s
+      start_period: 10s
+    container_name: mycheque-containers-mongo
+
+  postgres:
+    image: postgres:17.0-alpine
+    volumes:
+      - ./pg-init.sql:/docker-entrypoint-initdb.d/pg-init.sql
+      - postgres_data:/var/lib/postgresql/data
+    hostname: postgres
+    environment:
+      POSTGRES_DB: mycheque
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pwd
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
+      retries: 3
+      timeout: 5s
+      interval: 10s
+      start_period: 15s
+    container_name: mycheque-containers-postgres

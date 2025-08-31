@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import com.mycheque.util.Assert;
 import com.mycheque.util.Lambdas;
+
 import com.mycheque.lang.Nullable;
 
 import com.mycheque.domain.Purchase;
@@ -43,29 +44,6 @@ public class MongoPurchaseService implements PurchaseService {
     }
 
     /**
-     * Derives an {@link com.mycheque.domain.Item Item}
-     * criteria using the <b>$elemMatch</b> operator.
-     * <p>
-     * The given {@code ItemQuery.Type} is used to decide
-     * whether to negate the output criteria or not.
-     *
-     * @param query the {@code PurchaseQuery} to derive a criteria from.
-     * @param type  the type of query.
-     * @return a derived criteria or {@code null} if the query is blank.
-     * @see Criteria#elemMatch(Criteria)
-     */
-    @Nullable
-    private Criteria elemMatch(ItemQuery query, ItemQuery.Type type) {
-        final var base = Criteria.where("items");
-
-        if (type == ItemQuery.Type.EXCLUSIVE) {
-            base.not();
-        }
-
-        return Lambdas.applyOrNull(this.deriveCriteria(query), base::elemMatch);
-    }
-
-    /**
      * A shortcut method.
      *
      * @param query the {@code PurchaseQuery} to derive a criteria from.
@@ -87,6 +65,29 @@ public class MongoPurchaseService implements PurchaseService {
     @Nullable
     private Criteria exclusiveElemMatch(ItemQuery query) {
         return elemMatch(query, ItemQuery.Type.EXCLUSIVE);
+    }
+
+    /**
+     * Derives an {@link com.mycheque.domain.Item Item}
+     * criteria using the <b>$elemMatch</b> operator.
+     * <p>
+     * The given {@code ItemQuery.Type} is used to decide
+     * whether to negate the output criteria or not.
+     *
+     * @param query the {@code PurchaseQuery} to derive a criteria from.
+     * @param type  the type of query.
+     * @return a derived criteria or {@code null} if the query is blank.
+     * @see Criteria#elemMatch(Criteria)
+     */
+    @Nullable
+    private Criteria elemMatch(ItemQuery query, ItemQuery.Type type) {
+        final var base = Criteria.where("items");
+
+        if (type == ItemQuery.Type.EXCLUSIVE) {
+            base.not();
+        }
+
+        return Lambdas.applyOrNull(this.deriveCriteria(query), base::elemMatch);
     }
 
     @Override
@@ -114,11 +115,15 @@ public class MongoPurchaseService implements PurchaseService {
         List<Criteria> composition = new ArrayList<>();
 
         if (query.include() != null) {
-            query.include().stream().map(this::inclusiveElemMatch).filter(Objects::nonNull)
+
+            query.include().stream().map(this::inclusiveElemMatch)
+                    .filter(Objects::nonNull)
                     .forEach(composition::add);
         }
         if (query.exclude() != null) {
-            query.exclude().stream().map(this::exclusiveElemMatch).filter(Objects::nonNull)
+
+            query.exclude().stream().map(this::exclusiveElemMatch)
+                    .filter(Objects::nonNull)
                     .forEach(composition::add);
         }
 

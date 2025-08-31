@@ -1,4 +1,4 @@
-package com.mycheque.repository;
+package com.mycheque.repository.jpa;
 
 import java.util.Optional;
 

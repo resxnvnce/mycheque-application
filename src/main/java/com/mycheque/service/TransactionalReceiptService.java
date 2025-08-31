@@ -20,8 +20,8 @@ import com.mycheque.lang.Nullable;
 import com.mycheque.domain.Receipt;
 import com.mycheque.domain.id.FiscalDataRecord;
 
-import com.mycheque.repository.ReceiptRepository;
-import com.mycheque.repository.PurchaseRepository;
+import com.mycheque.repository.jpa.ReceiptRepository;
+import com.mycheque.repository.mongo.PurchaseRepository;
 
 import com.mycheque.datatransfer.query.Patchnotes;
 import com.mycheque.datatransfer.query.ReceiptQuery;

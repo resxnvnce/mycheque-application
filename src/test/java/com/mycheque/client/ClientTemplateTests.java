@@ -4,20 +4,20 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mycheque.test.TestInstance;
-import com.mycheque.test.properties.ClientTestProperties;
-import com.mycheque.client.configure.ClientTestsConfiguration;
+import com.mycheque.test.configure.ClientTestProperties;
+import com.mycheque.test.configure.ClientTestConfiguration;
 
 /**
  * The {@link ClientTemplate} contract tests.
@@ -26,8 +26,8 @@ import com.mycheque.client.configure.ClientTestsConfiguration;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-@ContextConfiguration(classes = ClientTestsConfiguration.class)
-@TestInstance.PerClass
+@ContextConfiguration(classes = ClientTestConfiguration.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ClientTemplateTests {
 
     @Autowired

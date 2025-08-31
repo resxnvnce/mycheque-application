@@ -20,17 +20,17 @@ import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "defined_by",
+        property = "definition",
         visible = true
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(
                 value = ReceiptDefinition.ByQrRaw.class,
-                name = "qrraw"
+                name = "qr_raw"
         ),
         @JsonSubTypes.Type(
                 value = ReceiptDefinition.ByQrUrl.class,
-                name = "qrurl"
+                name = "qr_url"
         ),
         @JsonSubTypes.Type(
                 value = ReceiptDefinition.ByDetails.class,

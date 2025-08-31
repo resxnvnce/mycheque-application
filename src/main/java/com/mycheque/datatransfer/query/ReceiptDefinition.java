@@ -2,6 +2,7 @@ package com.mycheque.datatransfer.query;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
@@ -99,8 +100,8 @@ public interface ReceiptDefinition {
     @JsonIgnoreProperties(ignoreUnknown = true)
     record ByQrRaw(
 
-            @JsonProperty("qr_raw")
             @NotBlank(message = "{@not-blank#ReceiptDefinition.ByQrRaw.qrraw}")
+            @JsonProperty("qr_raw")
             String qrraw
 
     ) implements ReceiptDefinition {
@@ -120,8 +121,8 @@ public interface ReceiptDefinition {
     @JsonIgnoreProperties(ignoreUnknown = true)
     record ByQrUrl(
 
-            @JsonProperty("qr_url")
             @NotBlank(message = "{@not-blank#ReceiptDefinition.ByQrUrl.qrurl}")
+            @JsonProperty("qr_url")
             String qrurl
 
     ) implements ReceiptDefinition {
@@ -143,18 +144,19 @@ public interface ReceiptDefinition {
     @JsonIgnoreProperties(ignoreUnknown = true)
     record ByDetails(
 
-            @JsonProperty("id")
+            @Valid
             @NotNull(message = "{@not-null#ReceiptDefinition.ByDetails.id}")
+            @JsonProperty("id")
             FiscalDataRecord id,
 
-            @JsonProperty("total")
-            @Positive(message = "{@positive#ReceiptDefinition.ByDetails.total}")
             @NotNull(message = "{@not-null#ReceiptDefinition.ByDetails.total}")
+            @Positive(message = "{@positive#ReceiptDefinition.ByDetails.total}")
+            @JsonProperty("total")
             Float total,
 
-            @JsonProperty("timestamp")
             @Past(message = "{@past#ReceiptDefinition.ByDetails.timestamp}")
             @NotNull(message = "{@not-null#ReceiptDefinition.ByDetails.timestamp}")
+            @JsonProperty("timestamp")
             LocalDateTime timestamp
 
     ) implements ReceiptDefinition {

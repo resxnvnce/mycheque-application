@@ -1,8 +1,7 @@
 package com.mycheque.controller.validation;
 
-import java.util.function.Consumer;
-
 import org.springframework.validation.Errors;
+
 import org.springframework.stereotype.Component;
 
 import com.mycheque.validation.CustomerTokenValidator;
@@ -57,25 +56,15 @@ public class DefaultCredentialsValidator implements CredentialsValidator {
         final var owner = inspected.customer();
 
         acceptIfUpdatable(
-                owner.getThirdpartyToken(),
-                creds.token(),
+                owner.getThirdpartyToken(), creds.token(),
                 token -> this.customerTokenValidator.validate(token, errors)
         );
 
         acceptIfUpdatable(
-                owner.getUsername(),
-                applyOrNull(creds.profile(), ProfileUpdate::getUsername),
+                owner.getUsername(), applyOrNull(creds.profile(), ProfileUpdate::getUsername),
                 username -> this.usernameNotTakenValidator.validate(username, errors)
         );
 
         return !errors.hasErrors();
-    }
-
-    private <T> void acceptIfUpdatable(Object oldValue, T newValue, Consumer<? super T> action) {
-        boolean isUpdatable = newValue != null && !newValue.equals(oldValue);
-
-        if (isUpdatable) {
-            action.accept(newValue);
-        }
     }
 }

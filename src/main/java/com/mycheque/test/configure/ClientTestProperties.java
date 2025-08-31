@@ -1,4 +1,4 @@
-package com.mycheque.test.properties;
+package com.mycheque.test.configure;
 
 import java.util.List;
 import java.util.ArrayList;

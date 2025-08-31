@@ -1,46 +1,38 @@
-package com.mycheque.test.support;
-
-import com.mycheque.domain.Customer;
+package com.mycheque.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.core.Ordered;
-
-import org.springframework.test.context.TestContext;
-import org.springframework.test.context.support.AbstractTestExecutionListener;
+import com.mycheque.domain.Customer;
 
 import com.mycheque.util.hibernate6.NamedEnum;
+
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+
+import org.springframework.test.context.TestContext;
+import org.springframework.test.context.TestExecutionListener;
 
 /**
  * {@code TestExecutionListener} making sure that <i>Spring Data JPA</i>
  * tests are compatible with the {@code com.h2database} data source.
  * <p>
- * Consult the {@link #beforeTestClass(TestContext)} method-level javadoc for details.
+ * Consult the {@link #prepareTestInstance(TestContext)} method-level javadoc for details.
  *
  * @author resxnvnce
  */
-public class H2CompatibilityTestExecutionListener extends AbstractTestExecutionListener {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class H2CompatibilityTestExecutionListener implements TestExecutionListener {
 
     private static final Log LOG = LogFactory.getLog(H2CompatibilityTestExecutionListener.class);
 
-    private static final String NAMED_ENUM_NOT_SUPPORTED = "h2database does not support "
+    private static final String NAMED_ENUM_NOT_SUPPORTED = "com.h2database data source does not support "
             + "the named enums feature of PostgreSQL; to execute JPA tests, disable "
-            + "the [%s] annotation above the Customer#role attribute.";
-
-    /**
-     * Returns the highest precedence value, since it relies only on the metamodel.
-     *
-     * @return the highest precedence value.
-     */
-    @Override
-    public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
-    }
+            + "the [%s] annotation above the [%s] 'role' attribute.";
 
     /**
      * Ensures that the named enums feature is disabled, since
-     * {@code com.h2database} data source does not support it.
+     * the data source of {@code com.h2database} does not support it.
      * <p>
      * Precisely, the method is looking for the {@link NamedEnum} annotation
      * above the role attribute of the {@code Customer} entity;
@@ -49,19 +41,19 @@ public class H2CompatibilityTestExecutionListener extends AbstractTestExecutionL
      * @param testContext the test context for the test; never {@code null}.
      */
     @Override
-    public void beforeTestClass(TestContext testContext) {
+    public void prepareTestInstance(TestContext testContext) {
         try {
             var annotation = Customer.class.getDeclaredField("role").getAnnotation(NamedEnum.class);
 
             if (annotation != null) {
-                var message = String.format(NAMED_ENUM_NOT_SUPPORTED, NamedEnum.class);
+                var message = NAMED_ENUM_NOT_SUPPORTED.formatted(NamedEnum.class, Customer.class);
 
                 LOG.error(message);
                 throw new IllegalStateException(message);
             }
         }
         catch (NoSuchFieldException nsfe) {
-            LOG.warn("No Customer#role entity attribute detected.", nsfe);
+            LOG.warn("no 'role' attribute detected at [%s] entity".formatted(Customer.class), nsfe);
         }
     }
 }

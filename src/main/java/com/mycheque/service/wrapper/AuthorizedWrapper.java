@@ -1,12 +1,12 @@
 package com.mycheque.service.wrapper;
 
 import com.mycheque.util.Assert;
+
 import com.mycheque.domain.Customer;
 
 /**
  * Wraps a {@link Customer} entity respectively to some object.
  *
- * @param <T>      the type of wrapped object.
  * @param customer an entity.
  * @param object   an object.
  * @author resxnvnce

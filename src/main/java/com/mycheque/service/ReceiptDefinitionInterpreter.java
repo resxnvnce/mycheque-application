@@ -21,7 +21,10 @@ import com.mycheque.datatransfer.query.ReceiptDefinition;
  */
 public final class ReceiptDefinitionInterpreter {
 
-    private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmm");
+    /**
+     * The {@link DateTimeFormatter} being used for timestamp parsing.
+     */
+    public static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmm");
 
     /**
      * <i>Interpret</i> the given {@code ReceiptDefinition}

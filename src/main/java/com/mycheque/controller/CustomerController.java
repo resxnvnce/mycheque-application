@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.mycheque.domain.Customer;
 
 import com.mycheque.service.CustomerService;
@@ -39,6 +42,7 @@ import com.mycheque.security.DelegatingCustomerDetails;
  *
  * @author resxnvnce
  */
+@Tag(name = "1. The Customer API public endpoints")
 @RestController
 @RequestMapping(path = "/mycheque.com/v1/customers/")
 @AllArgsConstructor // the constructor might be too large
@@ -64,6 +68,7 @@ public class CustomerController {
      */
     private final CredentialsValidator credentialsValidator;
 
+    @Operation(summary = "Create a profile")
     @PostMapping
     public ResponseEntity<GenericResult> register(
             @Valid @RequestBody Credentials credentials, BindingResult errors, Locale locale) {
@@ -82,6 +87,7 @@ public class CustomerController {
         return new ResponseEntity<>(GenericResult.succeeded(message, description), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Edit an existing profile")
     @PatchMapping
     public ResponseEntity<GenericResult> applyUpdates(
             @AuthenticationPrincipal DelegatingCustomerDetails principal,

@@ -11,3 +11,8 @@ gradle
 # IntelliJ
 .idea
 *.iml
+
+# Miscellaneous
+images
+README.md
+LICENSE.txt

@@ -10,7 +10,8 @@ spring:
     password: ${PG_PASSWORD}
   jpa:
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
     open-in-view: false
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha

@@ -23,7 +23,7 @@ public interface PurchaseService {
      *     <li>has an {@linkplain Purchase#id() identifier} strictly inside the given pool;</li>
      *     <li>satisfies the {@code PurchaseQuery} specified, if present.</li>
      * </ul>
-     * <p>A {@code List} returned is never blank.</p>
+     * <p>A {@code List} returned might be blank.</p>
      *
      * @param pool the pool. Must not be blank.
      * @param query a query.

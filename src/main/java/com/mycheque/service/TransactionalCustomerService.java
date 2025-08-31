@@ -12,7 +12,7 @@ import com.mycheque.domain.Customer;
 
 import com.mycheque.mapping.CustomerMapper;
 
-import com.mycheque.repository.CustomerRepository;
+import com.mycheque.repository.jpa.CustomerRepository;
 
 import com.mycheque.datatransfer.profile.Credentials;
 import com.mycheque.datatransfer.profile.CredentialsUpdate;

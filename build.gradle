@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com'
-version = '0.1.1-alpha'
+version = '1.0.0-beta'
 description = 'mycheque'
 
 test {
@@ -25,7 +25,6 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok'
 
-    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
@@ -37,6 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+    testRuntimeOnly 'com.h2database:h2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

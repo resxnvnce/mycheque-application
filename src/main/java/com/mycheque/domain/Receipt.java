@@ -31,7 +31,7 @@ import org.springframework.data.domain.Persistable;
  *
  * @author resxnvnce
  */
-@Table(name = "receipt", schema = "mycheque")
+@Table(name = "receipt", schema = "public")
 public @Entity class Receipt implements HibernateProxiesAware, Persistable<FiscalDataRecord> {
 
     /**

@@ -15,26 +15,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * the {@linkplain #patches() patches} to apply
  * and some external configuration.
  *
- * @param enable1xxWarnings whether warning remarkables should be displayed or not.
- *                          Defaults to {@code false}.
- * @param patches           the {@link ReceiptDefinition}s to be transformed into
- *                          receipt entities and then added to the persistence store.
+ * @param shouldDisplay1xxWarnings whether warning remarkables should be displayed or not.
+ *                                 Defaults to {@code false}.
+ * @param patches                  the {@link ReceiptDefinition}s to be transformed into
+ *                                 receipt entities and then added to the persistence store.
  * @author resxnvnce
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Patchnotes(boolean enable1xxWarnings, List<ReceiptDefinition> patches) {
+public record Patchnotes(
+        @JsonFormat(shape = JsonFormat.Shape.BOOLEAN)
+        @JsonProperty("should_display_1xx_warnings")
+        Boolean shouldDisplay1xxWarnings,
+
+        @JsonProperty("patches")
+        @NotEmpty(message = "{@not-empty#Patchnotes.patches}")
+        List<@Valid ReceiptDefinition> patches) {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    static Patchnotes fromJsonProperties(
-
-            @JsonFormat(shape = JsonFormat.Shape.BOOLEAN)
-            @JsonProperty("enable_warnings")
-            Boolean warningsEnabled,
-
-            @JsonProperty("patches")
-            @NotEmpty(message = "{@not-empty#Patchnotes.patches}")
-            List<@Valid ReceiptDefinition> patches) {
-
-        return new Patchnotes(warningsEnabled != null && warningsEnabled, patches);
+    static Patchnotes fromJsonProperties(Boolean shouldDisplay1xxWarnings, List<ReceiptDefinition> patches) {
+        return new Patchnotes(shouldDisplay1xxWarnings != null && shouldDisplay1xxWarnings, patches);
     }
 }

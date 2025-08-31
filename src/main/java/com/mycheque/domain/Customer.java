@@ -37,7 +37,7 @@ import org.springframework.security.core.GrantedAuthority;
  *
  * @author resxnvnce
  */
-@Table(name = "customer", schema = "mycheque")
+@Table(name = "customer", schema = "public")
 public @Entity class Customer implements HibernateProxiesAware {
 
     /**
@@ -58,7 +58,7 @@ public @Entity class Customer implements HibernateProxiesAware {
     /**
      * The user password, which is always stored in an encrypted form.
      */
-    @Column(name = "password", nullable = false, length = 31)
+    @Column(name = "password", nullable = false, length = 61)
     private String password;
 
     /**
@@ -73,7 +73,7 @@ public @Entity class Customer implements HibernateProxiesAware {
      * <p>
      * Defaults to {@link Role#USER}.
      */
-    @Column(name = "role", nullable = false, length = 31)
+    @Column(name = "role", nullable = false, length = 31, columnDefinition = "customer_role")
     @NamedEnum // resolves the SQLGrammarException issue
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
