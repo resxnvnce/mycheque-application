@@ -17,14 +17,14 @@ import com.mycheque.service.wrapper.PatchnotesOutcome;
  * @author resxnvnce
  */
 @Component
-public final class BasicOutcomeResultExtractor extends AbstractPatchnotesOutcomeResultExtractor {
+public final class DefaultOutcomeResultExtractor extends AbstractPatchnotesOutcomeResultExtractor {
 
     /**
-     * Constructs a {@code BasicOutcomeResultExtractor}.
+     * Constructs a {@code DefaultOutcomeResultExtractor}.
      *
      * @param messageResolver the {@link GenericResult} messages supplier.
      */
-    public BasicOutcomeResultExtractor(MessageResolver messageResolver) {
+    public DefaultOutcomeResultExtractor(MessageResolver messageResolver) {
         super(messageResolver);
     }
 

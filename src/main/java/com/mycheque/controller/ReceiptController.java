@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import com.mycheque.domain.Receipt;
 
 import com.mycheque.service.ReceiptService;
@@ -41,9 +38,8 @@ import com.mycheque.security.DelegatingCustomerDetails;
  *
  * @author resxnvnce
  */
-@Tag(name = "2. The Receipt API public endpoints")
 @RestController
-@RequestMapping(path = "/mycheque.com/v1/receipts/")
+@RequestMapping(path = "/mycheque.com/v1/receipts")
 public class ReceiptController {
 
     /**
@@ -80,7 +76,6 @@ public class ReceiptController {
         this.outcomeMappers = List.copyOf(outcomeMappers);
     }
 
-    @Operation(summary = "Link one or multiple receipts to your profile at once")
     @PostMapping
     public ResponseEntity<GenericResult> saveAll(
             @AuthenticationPrincipal DelegatingCustomerDetails principal,
@@ -116,8 +111,7 @@ public class ReceiptController {
         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); // never happens
     }
 
-    @Operation(summary = "Search for one or multiple receipts using flexible parameters")
-    @PostMapping("search/")
+    @PostMapping("/search")
     public ResponseEntity<GenericResult> findAll(
             @AuthenticationPrincipal DelegatingCustomerDetails principal,
             @Valid @RequestBody ReceiptQuery receiptQuery, BindingResult errors, Locale locale) {

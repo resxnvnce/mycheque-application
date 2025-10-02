@@ -50,7 +50,7 @@ public class RestSecurityConfiguration {
                         .requestMatchers("/mycheque.com/v1/receipts/**")
                         .authenticated()
 
-                        .requestMatchers(HttpMethod.PATCH, "/mycheque.com/v1/customers/")
+                        .requestMatchers(HttpMethod.PATCH, "/mycheque.com/v1/customers")
                         .authenticated()
 
                         .anyRequest()

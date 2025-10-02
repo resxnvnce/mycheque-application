@@ -14,4 +14,4 @@ spring:
 
 springdoc:
   swagger-ui:
-    tags-sorter: alpha
+    url: open-api.yml

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -40,7 +41,7 @@ public interface ReceiptDefinition {
      *
      * @return this receipt definition method.
      */
-    @JsonIgnore
+    @JsonProperty("definition")
     By by();
 
     /**
@@ -66,9 +67,6 @@ public interface ReceiptDefinition {
          */
         DETAILS(false);
 
-        /**
-         * Indicates that a method is based on a QR code representation.
-         */
         private final boolean isQrBased;
 
         /**
@@ -78,14 +76,19 @@ public interface ReceiptDefinition {
          *         {@code false} otherwise.
          */
         public boolean isQrBased() {
-            return isQrBased;
+            return this.isQrBased;
         }
 
         /**
-         * Constructs a new definition method.
+         * Returns the JSON value this definition method mapped to.
          *
-         * @param isQrBased indicates that this method {@link #isQrBased()}.
+         * @return a {@code String} value that matches this definition method.
          */
+        @JsonValue
+        public String toJsonProperty() {
+            return this.name().toLowerCase();
+        }
+
         By(boolean isQrBased) {
             this.isQrBased = isQrBased;
         }

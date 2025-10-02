@@ -1,0 +1,636 @@
+openapi: 3.1.0
+
+info:
+  title: MyCheque REST API Project
+  version: 1.1.0
+  description: |
+    The application allows you to save your market receipts into a storage and retrieve \
+    detailed information about your purchases using the flexible set of search parameters.
+    
+    To get started, register at the third-party API provider's [website](https://proverkacheka.com/)
+    and then obtain an **API key**, hereinafter referred to as `token`.
+    
+    ### Contacts:
+    - You can contact me via
+      * email: **resxnvnce@gmail.com**
+      * telegram: **https://t.me/resxnvnce**
+
+    - Source code is available at the [GitHub repository](https://github.com/resxnvnce/mycheque-application).
+
+servers:
+  - url: http://localhost:8080/mycheque.com/v1
+    description: the application server
+
+paths:
+  # The Customer API
+  '/customers':
+    # A new profile registration
+    post:
+      tags:
+        - '1. Get started with a profile'
+      summary: Got a token? Let's create a profile!
+      operationId: register
+      description: |
+        Profile is needed to distinguish between your receipts and the ones that belong to _another customers_.
+        
+        In order to create one, you'll need a unique _username_ and a _password_.
+
+        A `username` must start with a latin letter, may contain latin letters, numbers and underscores. \
+        Required length: from 3 to 30 characters;
+        
+        A `password` must contain both an uppercase and a lowercase latin letter, a number and one of the special characters (@#$%&). \
+        Required length: from 4 to 31 characters.
+        
+        Also make sure you've acquired a `token` to fill in the same property.
+
+      responses:
+        # In case a registration has succeeded
+        '201':
+          $ref: '#/components/responses/ProfileUpdateSuccess'
+
+        # In case a registration has failed
+        '400':
+          $ref: '#/components/responses/ProfileUpdateFailure'
+
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+        required: true
+
+    # An existing profile update
+    patch:
+      tags:
+        - '2. Edit an existing profile'
+      summary: Wanna update your profile?
+      operationId: applyUpdates
+      description: |
+        In order to update your `profile`, authorize and send the new version of your credentials. 
+        
+        Note that the update mechanism is _dynamic_, so you may only specify the properties that are actually being changed.
+
+      # Secured endpoint
+      security:
+        - 'HttpBasicAuthentication': []
+
+      responses:
+        # In case an update has succeeded
+        '200':
+          $ref: '#/components/responses/ProfileUpdateSuccess'
+
+        # In case an update has failed
+        '400':
+          $ref: '#/components/responses/ProfileUpdateFailure'
+
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredentialsUpdate'
+        required: true
+
+  # The Receipt API
+  '/receipts':
+    # Saving a bunch of receipts
+    post:
+      tags:
+        - '3. Save and then search for your receipts'
+      summary: Save a group of receipts using a single request
+      operationId: saveAll
+      description: |
+        ## What does a request body contain?
+        
+        `should_display_1xx_warnings` is an **optional** property, toggles the _warnings_ display mode. Disabled by default. \
+        By the current version of API, warnings are displayed if you duplicate one or more receipts in a single request.
+        
+        To link a receipt (or a list of them) to your profile, use the `patches` array property. Receipts you provide must contain \
+        the `definition` property and then the properties specific for each of _the shapes_.
+
+        Here's the table making it clear, I hope:
+        
+        | **Shape** | `definition` value | **Schema** |
+        |:---------:|:------------------:|:----------:|
+        |  Shape 1  |      `details`     |  ByDetails |
+        |  Shape 2  |      `qr_raw`      |   ByQrRaw  |
+        |  Shape 3  |      `qr_url`      |   ByQrUrl  |
+        
+        ## Shape 1. Schema: ByDetails
+        
+        | Request body property |   Type   |   Format  | Real receipt property |                            Notes                           |
+        |-----------------------|:--------:|:---------:|-----------------------|:----------------------------------------------------------:|
+        |        `id.fn`        | `string` |     -     |    № ФН / ФН / ...    |         the fiscal drive number, usually 16 digits         |
+        |        `id.fd`        | `string` |     -     |    № ФД / ФД / ...    |       the fiscal document number, usually 5-6 digits       |
+        |        `id.fp`        | `string` |     -     |     ФПД / ФП / ...    |             the fiscal sign, usually 10 digits             |
+        |        `total`        | `number` |   float   |  ИТОГО / ВСЕГО / ...  |            the total money spent, **in RUBLES**            |
+        |      `timestamp`      | `string` | date-time |           -           | the transaction date-time, usually at the top of a receipt |
+        
+        ## Shape 2. Schema: ByQrRaw
+        
+        You'll need to scan a **QR code** and put the string that shows up into the `qr_raw` property. \
+        Here's what the string looks like:
+        ```
+        t=20251001T2031&s=1999.99&fn=7380133700210322&i=10041&fp=4082332948&n=1
+        ```
+
+        ## Shape 3. Schema: ByQrUrl
+        
+        To use this one, copy a **URL** of receipt and insert it into the `qr_url` property.
+
+      # Secured endpoint
+      security:
+        - 'HttpBasicAuthentication': []
+
+      responses:
+        # In case a group of receipts has been saved
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DefaultPatchnotesOutcome'
+                    description: |
+                      This means all the receipts provided are now added to your profile.
+                  - $ref: '#/components/schemas/WarningPatchnotesOutcome'
+                    description: |
+                      This means all the receipts provided are now added to your profile,
+                      but there are some warnings regarding the request body, see the `description` property.
+
+        # In case a group of receipts has not been saved due to a failure
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailurePatchnotesOutcome"
+                description: |
+                  This means **none** of the receipts provided have been added to your profile
+                  due to some failures, see the `description` property.
+
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patchnotes'
+        required: true
+
+  '/receipts/search':
+    # Querying a bunch of receipts
+    post:
+      tags:
+        - '3. Save and then search for your receipts'
+      summary: Use the flexible set of parameters to search for a group of receipts
+      operationId: findAll
+      description: |
+        ## What does a request body contain?
+        
+        The upper level is a **receipt query**, as shown below,
+
+        | Property              | Type      | Description                                                      |
+        |-----------------------|-----------|------------------------------------------------------------------|
+        | `foundation_contains` | `string`  | value that a receipt foundation should contain, case-insensitive |
+        | `min_total`           | `integer` | minimal value for a receipt total in kopecks, inclusive          |
+        | `max_total`           | `integer` | maximum value for a receipt total in kopecks, inclusive          |
+        | `min_timestamp`       | `string`  | minimal value for a receipt timestamp, inclusive                 |
+        | `max_timestamp`       | `string`  | maximum value for a receipt timestamp, inclusive                 |
+        | `purchase`            | `object`  | query for a receipt purchase                                     |
+        
+        where `purchase` property is a query object that looks like:
+        
+        | Property  | Type    | Description                                                                                                                      |
+        |-----------|---------|----------------------------------------------------------------------------------------------------------------------------------|
+        | `include` | `array` | queries representing the items that MUST be present in a purchase to be returned upon executing this query                       |
+        | `exclude` | `array` | queries representing the items that, on the contrary, MUST NOT be present in a purchase to be returned upon executing this query |
+
+        ## How does a purchase query work?
+        A receipt is considered satisfying a **purchase query** _if and only if_ it contains
+        - enough items to satisfy **EACH OF** the item queries inside `include` array, **AND**
+        - not a single item that satisfies **ANY OF** the item queries inside `exclude` array.
+  
+        ## What is an item query?
+        It is a query object with the structure as shown below.
+
+        | Property        | Type      | Description                                              |
+        |-----------------|-----------|----------------------------------------------------------|
+        | `name_contains` | `string`  | value that an item name should contain, case-insensitive |
+        | `min_price`     | `integer` | minimal value for an item price, inclusive               |
+        | `max_price`     | `integer` | maximum value for an item price, inclusive               |
+        | `min_count`     | `integer` | minimal value for an item count, inclusive               |
+        | `max_count`     | `integer` | maximum value for an item count, inclusive               |
+        
+        Worth mentioning that the receipt query mechanism is _dynamic_, so there are no required properties. \
+        You can load out all of your receipts by just sending an empty request body.
+
+      # Secured endpoint
+      security:
+        - 'HttpBasicAuthentication': []
+
+      responses:
+        # In case of a query provided is valid
+        '200':
+          $ref: '#/components/responses/ReceiptQuerySuccess'
+
+        # In case of a query provided is invalid
+        '400':
+          $ref: '#/components/responses/ReceiptQueryFailure'
+
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptQuery'
+        required: true
+
+components:
+  schemas:
+    # 1. Respective to com.mycheque.datatransfer.profile.* classes
+    'Profile':
+      type: object
+      title: Profile
+      required:
+        - username
+        - password
+      properties:
+        'username':
+          type: string
+          pattern: '^[a-zA-Z][a-zA-Z0-9_]{3,30}$'
+        'password':
+          type: string
+          format: password
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%&])[A-Za-z\d@#$%&]{4,31}$'
+
+    'ProfileUpdate':
+      type: object
+      title: ProfileUpdate
+      properties:
+        'username':
+          type: string
+          pattern: '^[a-zA-Z][a-zA-Z0-9_]{3,30}$'
+        'password':
+          type: string
+          format: password
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%&])[A-Za-z\d@#$%&]{4,31}$'
+
+    'Credentials':
+      type: object
+      title: Credentials
+      required:
+        - profile
+        - token
+      properties:
+        'profile':
+          $ref: '#/components/schemas/Profile'
+        'token':
+          type: string
+
+    'CredentialsUpdate':
+      type: object
+      title: CredentialsUpdate
+      properties:
+        'profile':
+          $ref: '#/components/schemas/ProfileUpdate'
+        'token':
+          type: string
+
+    # 2. Respective to com.mycheque.datatransfer.query.* classes :: including inner ones
+    'Patchnotes':
+      type: object
+      title: Patchnotes
+      required:
+        - patches
+      properties:
+        'should_display_1xx_warnings':
+          type: boolean
+          default: false
+        'patches':
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ByQrRaw'
+              - $ref: '#/components/schemas/ByQrUrl'
+              - $ref: '#/components/schemas/ByDetails'
+            discriminator:
+              propertyName: 'definition'
+              mapping:
+                qr_raw : '#/components/schemas/ByQrRaw'
+                qr_url : '#/components/schemas/ByQrUrl'
+                details: '#/components/schemas/ByDetails'
+
+    'ReceiptDefinition':
+      type: object
+      title: ReceiptDefinition
+      required:
+        - definition
+      properties:
+        'definition':
+          type: string
+
+    ## see ReceiptDefinition.ByDetails
+    'ByDetails':
+      allOf:
+        - $ref: '#/components/schemas/ReceiptDefinition'
+        - type: object
+          title: ByDetails
+          required:
+            - id
+            - total
+            - timestamp
+          properties:
+            'id':
+              type: object
+              required:
+                - fn
+                - fd
+                - fp
+              properties:
+                'fn':
+                  type: string
+                  example: 1234123498769876
+                  pattern: '^\\d{4,31}$'
+                'fd':
+                  type: string
+                  example: 666666
+                  pattern: '^\\d{4,31}$'
+                'fp':
+                  type: string
+                  example: 1234567890
+                  pattern: '^\\d{4,31}$'
+            'total':
+              type: number
+              format: float
+              example: 329.99
+            'timestamp':
+              type: string
+              format: date-time
+              example: 2025-09-30T20:31
+
+    ## see ReceiptDefinition.ByQrRaw
+    'ByQrRaw':
+      allOf:
+        - $ref: '#/components/schemas/ReceiptDefinition'
+        - type: object
+          title: ByQrRaw
+          required:
+            - qr_raw
+          properties:
+            'qr_raw':
+              type: string
+              example: 't=20251001T2031&s=1999.99&fn=7380133700210322&i=10041&fp=4082332948&n=1'
+
+    ## see ReceiptDefinition.ByQrUrl
+    'ByQrUrl':
+      allOf:
+        - $ref: '#/components/schemas/ReceiptDefinition'
+        - type: object
+          title: ByQrUrl
+          required:
+            - qr_url
+          properties:
+            'qr_url':
+              type: string
+
+    ## ReceiptQuery -> PurchaseQuery -> [ItemQuery]
+    'ItemQuery':
+      type: object
+      title: ItemQuery
+      properties:
+        'name_contains':
+          type: string
+          example: 'чай'
+        'min_price':
+          type: integer
+          minimum: 1
+          example: 9999
+        'max_price':
+          type: integer
+          minimum: 1
+          example: 49999
+        'min_count':
+          type: integer
+          minimum: 1
+          example: 1
+        'max_count':
+          type: integer
+          minimum: 1
+          example: 9
+
+    ## [ReceiptQuery] -> PurchaseQuery -> ItemQuery
+    'ReceiptQuery':
+      type: object
+      title: ReceiptQuery
+      properties:
+        'foundation_contains':
+          type: string
+          example: 'Лента'
+        'min_total':
+          type: integer
+          minimum: 1
+          example: 99999
+        'max_total':
+          type: integer
+          minimum: 1
+          example: 499999
+        'min_timestamp':
+          type: string
+          format: date-time
+          example: 2025-09-30T20:31
+        'max_timestamp':
+          type: string
+          format: date-time
+          example: 2025-10-01T20:31
+        'purchase':
+          $ref: '#/components/schemas/PurchaseQuery'
+
+    ## ReceiptQuery -> [PurchaseQuery] -> ItemQuery
+    'PurchaseQuery':
+      type: object
+      title: PurchaseQuery
+      properties:
+        'include':
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemQuery'
+        'exclude':
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemQuery'
+
+    # 3. Respective to com.mycheque.datatransfer.result.* classes
+    'RequestedItem':
+      type: object
+      title: RequestedItem
+      properties:
+        'name':
+          type: string
+        'price':
+          type: integer
+        'count':
+          type: integer
+
+    'RequestedReceipt':
+      type: object
+      title: RequestedReceipt
+      properties:
+        'fn':
+          type: string
+        'fp':
+          type: string
+        'fd':
+          type: string
+        'items':
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestedItem'
+        'total':
+          type: integer
+        'timestamp':
+          type: string
+          format: date-time
+        'foundation':
+          type: string
+
+    'RemarkableExplained':
+      type: object
+      title: RemarkableExplained
+      properties:
+        'subject':
+          $ref: '#/components/schemas/ReceiptDefinition'
+        'explanation':
+          type: string
+
+    'MutationDescription':
+      type: object
+      title: MutationDescription
+      properties:
+        'username':
+          type: string
+          nullable: false
+        'token':
+          type: string
+          nullable: false
+
+    # 4. These are actually a workaround
+    'DefaultPatchnotesOutcome':
+      type: object
+      title: DefaultPatchnotesOutcome
+      properties:
+        'message':
+          type: string
+          nullable: false
+
+    'WarningPatchnotesOutcome':
+      type: object
+      title: WarningPatchnotesOutcome
+      properties:
+        'message':
+          type: string
+          nullable: false
+        'description':
+          type: array
+          items:
+            $ref: '#/components/schemas/RemarkableExplained'
+          nullable: false
+
+    'FailurePatchnotesOutcome':
+      type: object
+      title: FailurePatchnotesOutcome
+      properties:
+        'message':
+          type: string
+          nullable: false
+        'description':
+          type: array
+          items:
+            $ref: '#/components/schemas/RemarkableExplained'
+          nullable: false
+
+  responses:
+    # Whenever a receipt query executed properly
+    'ReceiptQuerySuccess':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              'message':
+                type: string
+              'description':
+                type: array
+                items:
+                  $ref: '#/components/schemas/RequestedReceipt'
+      description: |
+        This means a receipt query has been executed successfully,
+        with the receipts found present in the `description` property.
+
+    # Whenever a receipt query cannot execute properly
+    'ReceiptQueryFailure':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              'message':
+                type: string
+      description: |
+        This means a receipt query hasn't been executed due to an invalid request body,
+        see the explanation in the `message` property. 
+
+    # Whenever a profile is successfully created or updated
+    'ProfileUpdateSuccess':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              'message':
+                type: string
+              'description':
+                $ref: '#/components/schemas/MutationDescription'
+      description: |
+        This means a profile is successfully created/updated, with the actual credentials
+        present in the `description` property, sensitive data excluded.
+
+    # Whenever a profile cannot be created or updated
+    'ProfileUpdateFailure':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              'message':
+                type: string
+      description: |
+        This means a profile cannot be created or the current one cannot be updated
+        due to an invalid request body, see the explanation in the `message` property.
+
+  parameters:
+    'Locale':
+      in: header
+      name: Accept-Language
+      schema:
+        type: string
+      required: false
+      description: |
+        the locale for server to use in response messages
+        - supports english and russian locales;
+        - defaults to `en-US`
+
+  securitySchemes:
+    'HttpBasicAuthentication':
+      type: http
+      scheme: basic
+      description: |
+        the default security schema used at the moment; contains
+        - username as in your profile
+        - password as in your profile

@@ -1,12 +1,11 @@
 # Tests
 src/test
-src/main/java/com/mycheque/test
+src/main/**/test
 
 # Gradle
 .gradle
 
 build
-gradle
 
 # IntelliJ
 .idea
